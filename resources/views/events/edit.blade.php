@@ -2,7 +2,7 @@
 
 @section('content')
     <h1>Edit Event: {{ $event->title }}</h1>
-    <form action="{{ route('events.update', $event) }}" method="POST">
+    <form action="{{ route('events.update', $event) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="form-group">
@@ -13,6 +13,16 @@
             <label>Description</label>
             <textarea name="description" class="form-control" required>{{ $event->description }}</textarea>
         </div>
+
+        <div class="form-group">
+            <label>Banner Image</label>
+            <input type="file" name="banner_image" class="form-control-file" accept="image/jpeg,image/png,image/jpg,image/gif">
+            @if($event->banner_url)
+                <p>Current image: <img src="{{ asset('storage/' . $event->banner_url) }}" alt="Banner" style="max-width: 200px;"></p>
+            @endif
+            @error('banner_image') <div class="text-danger">{{ $message }}</div> @enderror
+        </div>
+
         <div class="form-group">
             <label>Start Date</label>
             <input type="datetime-local" name="start_date" class="form-control" value="{{ $event->start_date->format('Y-m-d\TH:i') }}" required>

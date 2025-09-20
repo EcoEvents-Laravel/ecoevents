@@ -2,7 +2,7 @@
 
 @section('content')
     <h1>Create Event</h1>
-    <form action="{{ route('events.store') }}" method="POST">
+    <form action="{{ route('events.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="form-group">
             <label>Title</label>
@@ -12,6 +12,13 @@
             <label>Description</label>
             <textarea name="description" class="form-control" required></textarea>
         </div>
+
+        <div class="form-group">
+            <label>Banner Image</label>
+            <input type="file" name="banner_image" class="form-control-file" accept="image/jpeg,image/png,image/jpg,image/gif">
+            @error('banner_image') <div class="text-danger">{{ $message }}</div> @enderror
+        </div>
+
         <div class="form-group">
             <label>Start Date</label>
             <input type="datetime-local" name="start_date" class="form-control" required>

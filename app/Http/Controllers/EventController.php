@@ -6,7 +6,8 @@ use App\Models\Event;
 use App\Models\EventType;
 use App\Models\Tag;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class EventController extends Controller
 {
@@ -25,9 +26,21 @@ class EventController extends Controller
 
     public function store(Request $request)
     {
+        // Log file details for debugging
+        if ($request->hasFile('banner_image')) {
+            Log::info('File uploaded:', [
+                'name' => $request->file('banner_image')->getClientOriginalName(),
+                'mime' => $request->file('banner_image')->getClientMimeType(),
+                'size' => $request->file('banner_image')->getSize(),
+            ]);
+        } else {
+            Log::info('No file uploaded in request.');
+        }
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
+            'banner_image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'city' => 'required|string',
@@ -37,8 +50,16 @@ class EventController extends Controller
             'event_type_id' => 'required|exists:event_types,id',
             'tags' => 'array',
             'tags.*' => 'exists:tags,id',
-            // Add other fields as needed
         ]);
+
+        // Handle file upload
+        if ($request->hasFile('banner_image') && $request->file('banner_image')->isValid()) {
+            $path = $request->file('banner_image')->store('banners', 'public');
+            $validated['banner_url'] = $path;
+            Log::info('Image stored at: ' . $path);
+        } else {
+            $validated['banner_url'] = null; // Ensure null if no valid file
+        }
 
         $event = Event::create($validated);
         $event->tags()->sync($request->tags ?? []);
@@ -62,17 +83,42 @@ class EventController extends Controller
 
     public function update(Request $request, Event $event)
     {
+        // Log file details for debugging
+        if ($request->hasFile('banner_image')) {
+            Log::info('File uploaded for update:', [
+                'name' => $request->file('banner_image')->getClientOriginalName(),
+                'mime' => $request->file('banner_image')->getClientMimeType(),
+                'size' => $request->file('banner_image')->getSize(),
+            ]);
+        } else {
+            Log::info('No file uploaded for update.');
+        }
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
+            'banner_image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'city' => 'required|string',
             'country' => 'required|string',
+            'address' => 'required|string|max:255',
+            'max_participants' => 'nullable|integer|min:1',
             'event_type_id' => 'required|exists:event_types,id',
             'tags' => 'array',
             'tags.*' => 'exists:tags,id',
         ]);
+
+        // Handle file upload
+        if ($request->hasFile('banner_image') && $request->file('banner_image')->isValid()) {
+            // Delete old image if exists
+            if ($event->banner_url) {
+                Storage::disk('public')->delete($event->banner_url);
+            }
+            $path = $request->file('banner_image')->store('banners', 'public');
+            $validated['banner_url'] = $path;
+            Log::info('Image stored at: ' . $path);
+        }
 
         $event->update($validated);
         $event->tags()->sync($request->tags ?? []);
@@ -82,6 +128,9 @@ class EventController extends Controller
 
     public function destroy(Event $event)
     {
+        if ($event->banner_url) {
+            Storage::disk('public')->delete($event->banner_url);
+        }
         $event->delete();
         return redirect()->route('events.index')->with('success', 'Event deleted successfully.');
     }
