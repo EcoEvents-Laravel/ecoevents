@@ -24,5 +24,6 @@
             <input type="text" name="icon" class="form-control" value="{{ $eventType->icon }}">
         </div>
         <button type="submit" class="btn btn-success">Update</button>
+        <a href="{{ route('event-types.index') }}" class="btn btn-secondary">Back</a>
     </form>
 @endsection

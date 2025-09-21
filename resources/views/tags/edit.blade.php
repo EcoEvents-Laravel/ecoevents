@@ -12,5 +12,6 @@
             <input type="text" name="name" class="form-control" value="{{ $tag->name }}" required>
         </div>
         <button type="submit" class="btn btn-success">Update</button>
+        <a href="{{ route('tags.index') }}" class="btn btn-secondary">Back</a>
     </form>
 @endsection

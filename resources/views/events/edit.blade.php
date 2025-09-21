@@ -64,5 +64,6 @@
             @endforeach
         </div>
         <button type="submit" class="btn btn-success">Update</button>
+        <a href="{{ route('events.index') }}" class="btn btn-secondary">Back</a>
     </form>
 @endsection

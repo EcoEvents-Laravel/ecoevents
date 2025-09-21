@@ -7,9 +7,25 @@ use Illuminate\Http\Request;
 
 class TagController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $tags = Tag::withCount('events')->latest()->paginate(10);
+        $query = Tag::withCount('events');
+
+        // Apply search filters
+        if ($request->filled('name')) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        }
+
+        if ($request->filled('min_events')) {
+            $query->having('events_count', '>=', $request->min_events);
+        }
+
+        if ($request->filled('max_events')) {
+            $query->having('events_count', '<=', $request->max_events);
+        }
+
+        $tags = $query->latest()->paginate(10);
+
         return view('tags.index', compact('tags'));
     }
 

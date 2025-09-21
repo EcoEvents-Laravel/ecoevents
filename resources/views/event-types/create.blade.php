@@ -23,5 +23,6 @@
             <input type="text" name="icon" class="form-control">
         </div>
         <button type="submit" class="btn btn-success">Save</button>
+        <a href="{{ route('event-types.index') }}" class="btn btn-secondary">Back</a>
     </form>
 @endsection

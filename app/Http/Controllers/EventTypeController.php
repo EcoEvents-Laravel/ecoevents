@@ -7,9 +7,18 @@ use Illuminate\Http\Request;
 
 class EventTypeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $eventTypes = EventType::withCount('events')->latest()->paginate(10);
+        $query = EventType::withCount('events')->latest();
+
+        // Apply search filters
+        if ($request->filled('name')) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        }
+
+
+        $eventTypes = $query->paginate(10);
+
         return view('event-types.index', compact('eventTypes'));
     }
 
@@ -23,7 +32,7 @@ class EventTypeController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:event_types,name',
             'description' => 'nullable|string',
-            'color' => 'required|string|max:7', // e.g., #FF0000
+            'color' => 'required|string|max:7',
             'icon' => 'nullable|string|max:255',
         ]);
 

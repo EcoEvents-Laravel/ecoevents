@@ -1,8 +1,46 @@
-@extends('layouts.app')  <!-- Assume you have a main layout -->
+@extends('layouts.app')
 
 @section('content')
     <h1>Events</h1>
-    <a href="{{ route('events.create') }}" class="btn btn-primary">Create New Event</a>
+    <a href="{{ route('events.create') }}" class="btn btn-primary mb-3">Create New Event</a>
+
+    <!-- Advanced Search Form -->
+    <form method="GET" action="{{ route('events.index') }}" class="mb-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <!-- Search by Title -->
+                    <div class="col-md-4 mb-3">
+                        <label for="search" class="form-label">Search by Title</label>
+                        <input type="text" name="search" id="search" class="form-control" value="{{ request('search') }}" placeholder="Enter event title">
+                    </div>
+
+                    <!-- Event Type -->
+                    <div class="col-md-4 mb-3">
+                        <label for="event_type_id" class="form-label">Event Type</label>
+                        <select name="event_type_id" id="event_type_id" class="form-control">
+                            <option value="">All Types</option>
+                            @foreach($eventTypes as $type)
+                                <option value="{{ $type->id }}" {{ request('event_type_id') == $type->id ? 'selected' : '' }}>
+                                    {{ $type->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-md-4 mb-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary me-2">Search</button>
+                    <a href="{{ route('events.index') }}" class="btn btn-secondary">Clear Filters</a>
+                    </div>
+
+                </div>
+
+                
+            </div>
+        </div>
+    </form>
+
+    <!-- Events Table -->
     <table class="table mt-3">
         <thead>
             <tr>
@@ -14,7 +52,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($events as $event)
+            @forelse($events as $event)
                 <tr>
                     <td>{{ $event->title }}</td>
                     <td>{{ $event->eventType->name ?? 'N/A' }}</td>
@@ -30,7 +68,11 @@
                         </form>
                     </td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="5" class="text-center">No events found.</td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
     {{ $events->links() }}
