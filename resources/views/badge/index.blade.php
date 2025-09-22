@@ -28,10 +28,11 @@
                     <td class="border px-4 py-2">{{ $badge->name }}</td>
                     <td class="border px-4 py-2">{{ $badge->description }}</td>
                     <td class="border px-4 py-2">
-                        <img src="{{ asset('resources/images/' . $badge->icon) }}" alt="{{ $badge->name }}" class="h-16 w-16 object-cover">
+                        <img src="{{ asset('/resources/images/' . $badge->icon) }}" alt="{{ $badge->name }}" class="h-16 w-16 object-cover">
                     </td>
             
                     <td class="border px-4 py-2">
+                        <button onclick="window.location='{{ route('badge.show', $badge->id) }}'" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">View</button>
                         <button onclick="openModal('updateBadgeModal'); populateUpdateForm({{ $badge->id }})" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Update Badge</button>
                         <button onclick="openModal('deleteBadgeModal'); populateDeleteForm({{ $badge->id }})" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Delete Badge</button>
                     </td>
@@ -44,7 +45,7 @@
 <div id="createBadgeModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
     <div class="bg-white rounded-lg p-6 w-full max-w-md">
         <h2 class="text-xl font-bold mb-4">Create Badge</h2>
-        <form method="POST" action="{{ route('badge.create') }}" enctype="multipart/form-data">
+        <form method="POST" action="{{ route('badge.store') }}" enctype="multipart/form-data">
             @csrf
             <div class="mb-4">
                 <label class="block mb-1">Name</label>
@@ -129,7 +130,7 @@
             const badge = @json($badges)[idx];
             document.getElementById('updateBadgeName').value = badge.name;
             document.getElementById('updateBadgeDescription').value = badge.description;
-            document.getElementById('updateBadgeForm').action = '/badges/' + badge.id;
+            document.getElementById('updateBadgeForm').action = '/badge/' + badge.id;
             openModal('updateBadgeModal');
         });
     });
@@ -138,7 +139,7 @@
     document.querySelectorAll('button.bg-red-500').forEach(function(btn, idx) {
         btn.addEventListener('click', function() {
             const badge = @json($badges)[idx];
-            document.getElementById('deleteBadgeForm').action = '/badges/' + badge.id;
+            document.getElementById('deleteBadgeForm').action = '/badge/' + badge.id;
             openModal('deleteBadgeModal');
         });
     });

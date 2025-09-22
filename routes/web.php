@@ -13,8 +13,5 @@ Route::get('/register', function () {
 Route::get('/welcome', function () {
     return view('welcome');
 })->name('welcome');
-Route::get('/badge',[BadgeController::class, 'index'])->name('badge.index');
-Route::post('/badge/create',[BadgeController::class, 'create'])->name('badge.create');
-Route::put('/badge/update',[BadgeController::class, 'update'])->name('badge.update');
-Route::delete('/badge/delete',[BadgeController::class, 'delete'])->name('badge.delete');
-Route::get('/user_badge', [UserBadgeController::class, 'index'])->name('user_badge');
+Route::resource('/badge', BadgeController::class);
+Route::resource('/user_badge', UserBadgeController::class);

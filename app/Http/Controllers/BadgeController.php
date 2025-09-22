@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Badge;
+use App\Http\Controllers\UserBadgeController;
 
 class BadgeController extends Controller
 {
@@ -11,8 +13,8 @@ class BadgeController extends Controller
      */
     public function index()
     {
-        $badges = []; // Fetch badges from the database
-        return view('badge', compact('badges'));
+        $badges = Badge::all(); // Fetch badges from the database
+        return view('badge.index', compact('badges'));
     }
 
     /**
@@ -20,7 +22,13 @@ class BadgeController extends Controller
      */
     public function create()
     {
-        //
+        $request=Request();
+        $badge=new Badge();
+        $badge->name=$request->name;
+        $badge->description=$request->description;
+        $badge->icon=$request->icon;
+        $badge->create();
+        return redirect()->route('badge.index');
     }
 
     /**
@@ -28,7 +36,12 @@ class BadgeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $badge = new Badge();
+        $badge->name = $request->input('name');
+        $badge->description = $request->input('description');
+        $badge->icon = $request->input('icon');
+        $badge->save();
+        return redirect()->route('badge.index');
     }
 
     /**
@@ -36,15 +49,8 @@ class BadgeController extends Controller
      */
     public function show(string $id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        $badge = Badge::findOrFail($id);
+        return view('badge.show', compact('badge'));
     }
 
     /**
@@ -52,7 +58,12 @@ class BadgeController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $badge = Badge::findOrFail($id);
+        $badge->name = $request->input('name');
+        $badge->description = $request->input('description');
+        $badge->icon = $request->input('icon');
+        $badge->save();
+        return redirect()->route('badge.index');
     }
 
     /**
@@ -60,6 +71,8 @@ class BadgeController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $badge = Badge::findOrFail($id);
+        $badge->delete();
+        return redirect()->route('badge.index');
     }
 }

@@ -36,7 +36,7 @@
                 </svg>
                 <h2 class="text-xl font-bold text-green-700 mb-1">User Badges</h2>
                 <p class="text-green-600 mb-3 text-center">View badges acquired by users.</p>
-                <a href="{{ route('user_badge') }}" class="bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600 transition font-semibold shadow">Go</a>
+                <a href="{{ route('user_badge.index') }}" class="bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600 transition font-semibold shadow">Go</a>
             </div>
         </div>
     </div>

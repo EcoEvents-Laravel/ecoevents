@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\UserBadge;
 
 class UserBadgeController extends Controller
 {
@@ -11,8 +12,8 @@ class UserBadgeController extends Controller
      */
     public function index()
     {
-        $user_badges = []; // Fetch user badges from the database
-        return view('user_badge', compact('user_badges'));
+        $user_badges = UserBadge::all(); // Fetch user badges from the database
+        return view('user_badge.index', compact('user_badges'));
     }
 
     /**
@@ -20,7 +21,13 @@ class UserBadgeController extends Controller
      */
     public function create()
     {
-        //
+        $request=Request();
+        $user_badge=new UserBadge();
+        $user_badge->user_id=$request->user_id;
+        $user_badge->badge_id=$request->badge_id;
+        $user_badge->create();
+        return redirect()->route('user_badge.index');
+        
     }
 
     /**
@@ -28,7 +35,12 @@ class UserBadgeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request=Request();
+        $user_badge=new UserBadge();
+        $user_badge->user_id=$request->user_id;
+        $user_badge->badge_id=$request->badge_id;
+        $user_badge->save();
+        return redirect()->route('user_badge.index');
     }
 
     /**
@@ -36,15 +48,8 @@ class UserBadgeController extends Controller
      */
     public function show(string $id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        $user_badge = UserBadge::findOrFail($id);
+        return view('user_badge.show', compact('user_badge'));
     }
 
     /**
@@ -52,7 +57,11 @@ class UserBadgeController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $user_badge = UserBadge::findOrFail($id);
+        $user_badge->user_id = $request->input('user_id');
+        $user_badge->badge_id = $request->input('badge_id');
+        $user_badge->save();
+        return redirect()->route('user_badge.index');
     }
 
     /**
@@ -60,6 +69,8 @@ class UserBadgeController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $user_badge = UserBadge::findOrFail($id);
+        $user_badge->delete();
+        return redirect()->route('user_badge.index');
     }
 }
