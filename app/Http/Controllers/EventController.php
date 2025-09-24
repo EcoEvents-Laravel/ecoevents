@@ -20,25 +20,11 @@ class EventController extends Controller
             $query->where('title', 'like', '%' . $request->search . '%');
         }
 
-        // Filter by date range
-        //if ($request->filled('start_date')) {
-        //    $query->whereDate('start_date', '>=', $request->start_date);
-        //}
-        //if ($request->filled('end_date')) {
-        //    $query->whereDate('end_date', '<=', $request->end_date);
-        //}
-
         // Filter by event type
         if ($request->filled('event_type_id')) {
             $query->where('event_type_id', $request->event_type_id);
         }
 
-        // Filter by tags
-        //if ($request->filled('tags')) {
-        //    $query->whereHas('tags', function ($q) use ($request) {
-        //        $q->whereIn('tags.id', $request->tags);
-        //    });
-        //}
 
         $events = $query->latest()->paginate(10)->appends($request->query());
         $eventTypes = EventType::all();

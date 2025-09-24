@@ -1,7 +1,9 @@
 @extends('layouts.app')
 
+@section('title', 'Dashboard')
+
 @section('content')
-    <h1>Events</h1>
+    <h1 class="mb-4">Events</h1>
     <a href="{{ route('events.create') }}" class="btn btn-primary mb-3">Create New Event</a>
 
     <!-- Advanced Search Form -->
