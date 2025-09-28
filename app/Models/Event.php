@@ -30,7 +30,7 @@ class Event extends Model
         'longitude',
         'max_participants',
         'status',
-        'tag_id',
+        'slug',
         'banner_url',
         'event_type_id',
     ];

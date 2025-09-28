@@ -26,7 +26,7 @@ return new class extends Migration
             $table->float('longitude')->nullable();
             $table->integer('max_participants')->nullable();
             $table->string('status')->default('draft');  // e.g., draft, published, cancelled
-            $table->foreignId('tag_id')->constrained('tags')->onDelete('cascade');
+            $table->string('slug')->unique();
             $table->foreignId('event_type_id')->constrained('event_types')->onDelete('cascade');
             $table->timestamps();
         });
