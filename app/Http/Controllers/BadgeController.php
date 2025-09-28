@@ -39,7 +39,11 @@ class BadgeController extends Controller
         $badge = new Badge();
         $badge->name = $request->input('name');
         $badge->description = $request->input('description');
-        $badge->icon = $request->input('icon');
+        if ($request->hasFile('icon')) {
+            $file = $request->file('icon');
+            $path = $file->store('badges', 'public');
+            $badge->icon = $path;
+        }
         $badge->save();
         return redirect()->route('badge.index');
     }

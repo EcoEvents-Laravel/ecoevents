@@ -35,7 +35,7 @@
                     <td class="px-4 py-2 font-semibold text-green-700">{{ $badge->name }}</td>
                     <td class="px-4 py-2 text-gray-700">{{ $badge->description }}</td>
                     <td class="px-4 py-2">
-                        <img src="{{ asset('/resources/images/' . $badge->icon) }}" alt="{{ $badge->name }}" class="h-16 w-16 object-cover rounded-full border-2 border-green-300 shadow">
+                        <img src="{{ asset('storage/' . $badge->icon) }}" alt="{{ $badge->name }}" class="h-16 w-16 object-cover rounded-full border-2 border-green-300 shadow">
                     </td>
                     <td class="px-4 py-2 flex gap-2">
                         <button onclick="window.location='{{ route('badge.show', $badge->id) }}'" class="bg-blue-100 text-blue-700 px-3 py-1 rounded hover:bg-blue-200 transition font-medium">View</button>
