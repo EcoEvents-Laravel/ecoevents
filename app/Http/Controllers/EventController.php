@@ -26,7 +26,7 @@ class EventController extends Controller
 
     public function store(Request $request)
     {
-        // Log file details for debugging
+        // ... (ton code pour store reste inchangé)
         if ($request->hasFile('banner_image')) {
             Log::info('File uploaded:', [
                 'name' => $request->file('banner_image')->getClientOriginalName(),
@@ -52,13 +52,12 @@ class EventController extends Controller
             'tags.*' => 'exists:tags,id',
         ]);
 
-        // Handle file upload
         if ($request->hasFile('banner_image') && $request->file('banner_image')->isValid()) {
             $path = $request->file('banner_image')->store('banners', 'public');
             $validated['banner_url'] = $path;
             Log::info('Image stored at: ' . $path);
         } else {
-            $validated['banner_url'] = null; // Ensure null if no valid file
+            $validated['banner_url'] = null;
         }
 
         $event = Event::create($validated);
@@ -67,10 +66,27 @@ class EventController extends Controller
         return redirect()->route('events.index')->with('success', 'Event created successfully.');
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Event  $event
+     * @return \Illuminate\View\View
+     */
     public function show(Event $event)
     {
-        $event->load(['eventType', 'tags']);
-        return view('events.show', compact('event'));
+        // On charge les relations existantes ET les commentaires avec leurs utilisateurs.
+        $event->load(['eventType', 'tags', 'comments.user']);
+
+        // On initialise la variable pour l'inscription de l'utilisateur à null.
+        $userRegistration = null;
+
+        // Si un utilisateur est connecté, on cherche son inscription pour cet événement.
+        if (auth()->check()) {
+            $userRegistration = $event->registrations()->where('user_id', auth()->id())->first();
+        }
+
+        // On envoie les deux variables ('event' et 'userRegistration') à la vue.
+        return view('events.show', compact('event', 'userRegistration'));
     }
 
     public function edit(Event $event)
@@ -83,7 +99,7 @@ class EventController extends Controller
 
     public function update(Request $request, Event $event)
     {
-        // Log file details for debugging
+        // ... (ton code pour update reste inchangé)
         if ($request->hasFile('banner_image')) {
             Log::info('File uploaded for update:', [
                 'name' => $request->file('banner_image')->getClientOriginalName(),
@@ -109,9 +125,7 @@ class EventController extends Controller
             'tags.*' => 'exists:tags,id',
         ]);
 
-        // Handle file upload
         if ($request->hasFile('banner_image') && $request->file('banner_image')->isValid()) {
-            // Delete old image if exists
             if ($event->banner_url) {
                 Storage::disk('public')->delete($event->banner_url);
             }
