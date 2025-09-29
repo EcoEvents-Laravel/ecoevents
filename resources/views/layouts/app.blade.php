@@ -61,9 +61,6 @@
                             <a class="nav-link" href="{{ route('registrations.index') }}">Mes Inscriptions</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('badge.index') }}">Mes Badges</a>
-                        </li>
-                        <li class="nav-item">
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <a class="nav-link" href="{{ route('logout') }}" 

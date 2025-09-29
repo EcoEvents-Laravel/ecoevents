@@ -50,4 +50,24 @@ class User extends Authenticatable
     {
         return $this->hasMany(Badge::class, 'user_badges')->withTimestamps();
     }
+
+    public function events()
+    {
+        return $this->hasMany(Event::class);
+    }
+
+    public function eventTypes()
+    {
+        return $this->hasMany(EventType::class);
+    }
+
+    public function tags()
+    {
+        return $this->hasMany(Tag::class);
+    }
+
+    public function registrations()
+    {
+        return $this->hasMany(Registration::class);
+    }
 }

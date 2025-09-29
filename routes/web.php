@@ -8,18 +8,30 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\EventTypeController;
 use App\Http\Controllers\TagController;
+use Illuminate\Support\Facades\Auth;
+Auth::routes();
 Route::get('/', function () {
-    return view('login');
+    return view('auth.login');
 })->name('login');
 Route::get('/register', function () {
-    return view('register');
+    return view('auth.register');
 })->name('register');
-Route::get('/welcome', function () {
-    return view('welcome');
-})->name('welcome');
+
+
 Route::resource('/badge', BadgeController::class);
 Route::resource('/user_badge', UserBadgeController::class);
 Route::resource('/events', EventController::class);
-Route::resource('/registrations', RegistrationController::class);
+
 Route::resource('/event-types', EventTypeController::class);
 Route::resource('/tags', TagController::class);
+
+
+
+Route::middleware('auth')->group(function () {
+    Route::resource('/registrations', RegistrationController::class);
+});
+
+Auth::routes();
+Route::post('/welcome', function () {
+        return view('welcome');
+})->name('welcome');
