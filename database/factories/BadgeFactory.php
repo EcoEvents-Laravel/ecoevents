@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Badge;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Badge>
@@ -14,6 +15,7 @@ class BadgeFactory extends Factory
      *
      * @return array<string, mixed>
      */
+    protected $model = Badge::class;
     public function definition(): array
     {
         return [

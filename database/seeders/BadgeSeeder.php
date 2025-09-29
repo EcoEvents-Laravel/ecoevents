@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Badge;
+use Database\Factories\BadgeFactory;
 class BadgeSeeder extends Seeder
 {
     /**
@@ -12,6 +13,6 @@ class BadgeSeeder extends Seeder
      */
     public function run(): void
     {
-        Badge::factory()->count(10)->create();
+        BadgeFactory::new()->count(10)->create();
     }
 }
