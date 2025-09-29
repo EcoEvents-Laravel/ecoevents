@@ -58,15 +58,24 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label fw-medium text-success">Name</label>
-                        <input type="text" name="name" class="form-control" required>
+                        <input type="text" name="name" class="form-control">
+                        @error('name')
+                            <div class="text-danger mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-medium text-success">Description</label>
-                        <textarea name="description" class="form-control" required></textarea>
+                        <textarea name="description" class="form-control"></textarea>
+                        @error('description')
+                            <div class="text-danger mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-medium text-success">Image</label>
-                        <input type="file" name="icon" class="form-control" required>
+                        <input type="file" name="icon" class="form-control">
+                        @error('icon')
+                            <div class="text-danger mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -92,11 +101,11 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label fw-medium text-warning">Name</label>
-                        <input type="text" name="name" id="updateBadgeName" class="form-control" required>
+                        <input type="text" name="name" id="updateBadgeName" class="form-control">
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-medium text-warning">Description</label>
-                        <textarea name="description" id="updateBadgeDescription" class="form-control" required></textarea>
+                        <textarea name="description" id="updateBadgeDescription" class="form-control"></textarea>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-medium text-warning">Image</label>

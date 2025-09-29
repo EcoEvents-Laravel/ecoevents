@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Badge;
 use App\Http\Controllers\UserBadgeController;
+use App\Http\Requests\BadgeRequest;
 
 class BadgeController extends Controller
 {
@@ -34,7 +35,7 @@ class BadgeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(BadgeRequest $request)
     {
         $badge = new Badge();
         $badge->name = $request->input('name');
@@ -44,6 +45,7 @@ class BadgeController extends Controller
             $path = $file->store('badges', 'public');
             $badge->icon = $path;
         }
+        Badge::create($request->validated());
         $badge->save();
         return redirect()->route('badge.index');
     }
