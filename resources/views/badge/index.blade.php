@@ -102,14 +102,23 @@
                     <div class="mb-3">
                         <label class="form-label fw-medium text-warning">Name</label>
                         <input type="text" name="name" id="updateBadgeName" class="form-control">
+                        @error('name')
+                            <div class="text-danger mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-medium text-warning">Description</label>
                         <textarea name="description" id="updateBadgeDescription" class="form-control"></textarea>
+                        @error('description')
+                            <div class="text-danger mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-medium text-warning">Image</label>
                         <input type="file" name="icon" class="form-control">
+                        @error('icon')
+                            <div class="text-danger mt-1">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
                 <div class="modal-footer">

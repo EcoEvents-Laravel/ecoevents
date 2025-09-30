@@ -62,13 +62,13 @@ class BadgeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(BadgeRequest $request, string $id)
     {
         $badge = Badge::findOrFail($id);
         $badge->name = $request->input('name');
         $badge->description = $request->input('description');
         $badge->icon = $request->input('icon');
-        $badge->save();
+        Badge::where('id', $id)->update($request->validated());
         return redirect()->route('badge.index');
     }
 

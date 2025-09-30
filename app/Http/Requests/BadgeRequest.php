@@ -23,8 +23,8 @@ class BadgeRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'icon' => 'nullable|string|max:255',
+            'description' => 'required|string',
+            'icon' => 'required|string|max:255',
         ];
     }
 }
