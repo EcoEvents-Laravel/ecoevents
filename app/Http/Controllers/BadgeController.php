@@ -46,6 +46,8 @@ class BadgeController extends Controller
             $badge->icon = $path;
         }
         Badge::create($request->validated());
+        //$userBadgeController=new UserBadgeController();
+        //$userBadgeController->store($request);
         $badge->save();
         return redirect()->route('badge.index');
     }

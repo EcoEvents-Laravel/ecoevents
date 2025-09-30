@@ -8,9 +8,13 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\EventTypeController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\CommentController;
 use Illuminate\Support\Facades\Auth;
 Auth::routes();
 Route::get('/', function () {
+    return redirect()->route('login');
+});
+Route::get('/login', function () {
     return view('auth.login');
 })->name('login');
 Route::get('/register', function () {
@@ -28,6 +32,8 @@ Route::resource('/tags', TagController::class);
 
 
 Route::middleware('auth')->group(function () {
+    Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
     Route::resource('/registrations', RegistrationController::class);
 });
 

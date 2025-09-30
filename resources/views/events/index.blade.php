@@ -18,8 +18,8 @@
                 <tr>
                     <td>{{ $event->title }}</td>
                     <td>{{ $event->eventType->name ?? 'N/A' }}</td>
-                    <td>{{ $event->tags->pluck('name')->implode(', ') }}</td>
-                    <td>{{ $event->start_date->format('Y-m-d H:i') }}</td>
+                    <td>{{ optional($event->tags)->count() ? $event->tags->pluck('name')->implode(', ') : 'No tags' }}</td>
+                    <td>{{ \Carbon\Carbon::parse($event->start_date)->format('Y-m-d H:i') }}</td>
                     <td>
                         <a href="{{ route('events.show', $event) }}" class="btn btn-info btn-sm">View</a>
                         <a href="{{ route('events.edit', $event) }}" class="btn btn-warning btn-sm">Edit</a>

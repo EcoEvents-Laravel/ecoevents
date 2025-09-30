@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\UserBadge;
+use App\Http\Requests\UserBadgeRequest;
 
 class UserBadgeController extends Controller
 {
@@ -33,12 +34,11 @@ class UserBadgeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(UserBadgeRequest $request)
     {
-        $request=Request();
-        $user_badge=new UserBadge();
-        $user_badge->user_id=$request->user_id;
-        $user_badge->badge_id=$request->badge_id;
+        $user_badge = new UserBadge();
+        $user_badge->user_id = $request->user_id;
+        $user_badge->badge_id = $request->badge_id;
         $user_badge->save();
         return redirect()->route('user_badge.index');
     }
@@ -55,7 +55,7 @@ class UserBadgeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UserBadgeRequest $request, string $id)
     {
         $user_badge = UserBadge::findOrFail($id);
         $user_badge->user_id = $request->input('user_id');
