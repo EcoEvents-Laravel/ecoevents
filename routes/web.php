@@ -38,6 +38,6 @@ Route::middleware('auth')->group(function () {
 });
 
 Auth::routes();
-Route::post('/welcome', function () {
+Route::get('/welcome', function () {
         return view('welcome');
 })->name('welcome');

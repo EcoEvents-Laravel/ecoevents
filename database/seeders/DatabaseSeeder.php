@@ -23,9 +23,12 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);*/
 
+        User::factory()->count(5)->create();
+
         $this->call([
-            //EventSeeder::class,
+            EventSeeder::class,
             BadgeSeeder::class,
+            UserBadgeSeeder::class,
         ]);
     }
 }

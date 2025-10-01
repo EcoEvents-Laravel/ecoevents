@@ -6,6 +6,9 @@ use App\Models\EventType;
 use App\Models\Tag;
 use App\Models\Event;
 use Illuminate\Database\Seeder;
+use Database\Factories\EventFactory;
+use Database\Factories\EventTypeFactory;
+use Database\Factories\TagFactory;
 
 class EventSeeder extends Seeder
 {
