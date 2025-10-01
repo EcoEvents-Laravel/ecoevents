@@ -15,19 +15,19 @@ class EventSeeder extends Seeder
     public function run(): void
     {
         // Seed EventTypes
-        $types = EventType::factory()->count(3)->create([
-            ['name' => 'Conference', 'color' => '#FF0000'],
-            ['name' => 'Workshop', 'color' => '#00FF00'],
-            ['name' => 'Seminar', 'color' => '#0000FF'],
+        $types = collect([
+            EventType::factory()->create(['name' => 'Conference', 'color' => '#FF0000']),
+            EventType::factory()->create(['name' => 'Workshop', 'color' => '#00FF00']),
+            EventType::factory()->create(['name' => 'Seminar', 'color' => '#0000FF']),
         ]);
 
         // Seed Tags
-        $tags = Tag::factory()->count(5)->create([
-            ['name' => 'Tech'],
-            ['name' => 'AI'],
-            ['name' => 'Innovation'],
-            ['name' => 'Education'],
-            ['name' => 'Networking'],
+        $tags = collect([
+            Tag::factory()->create(['name' => 'Tech']),
+            Tag::factory()->create(['name' => 'AI']),
+            Tag::factory()->create(['name' => 'Innovation']),
+            Tag::factory()->create(['name' => 'Education']),
+            Tag::factory()->create(['name' => 'Networking']),
         ]);
 
         // Seed Events with random associations

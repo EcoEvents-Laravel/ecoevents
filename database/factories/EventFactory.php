@@ -30,7 +30,6 @@ class EventFactory extends Factory
             'latitude' => $this->faker->latitude(),
             'longitude' => $this->faker->longitude(),
             'postal_code' => $this->faker->postcode(),
-            'tag_id' => Tag::factory(),
             'event_type_id' => EventType::factory(),
         ];
     }
