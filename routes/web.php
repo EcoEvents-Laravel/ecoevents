@@ -10,6 +10,7 @@ use App\Http\Controllers\EventTypeController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\CommentController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ChatbotController;
 Auth::routes();
 Route::get('/', function () {
     return redirect()->route('login');
@@ -35,6 +36,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
     Route::resource('/registrations', RegistrationController::class);
+    Route::get('/chatbot',function () {
+        return view('Chatbot-AI');
+    })->name('chatbot');
+    Route::post('/chatbot', [ChatbotController::class, 'getResponse'])->name('chatbot.response');
+    
 });
 
 Auth::routes();
