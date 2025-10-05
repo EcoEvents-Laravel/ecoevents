@@ -11,6 +11,7 @@ use App\Http\Controllers\TagController;
 use App\Http\Controllers\CommentController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\OrganisationController;
 Auth::routes();
 Route::get('/', function () {
     return redirect()->route('login');
@@ -29,6 +30,7 @@ Route::resource('/events', EventController::class);
 
 Route::resource('/event-types', EventTypeController::class);
 Route::resource('/tags', TagController::class);
+Route::resource('/organisations', App\Http\Controllers\OrganisationController::class);
 
 
 

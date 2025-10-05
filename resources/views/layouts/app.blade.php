@@ -40,6 +40,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('user_badge.index') }}">Badges des Utilisateurs</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('organisations.index') }}">Organisations</a>
+                    </li>
                 </ul>
 
                 <!-- Liens à droite -->
