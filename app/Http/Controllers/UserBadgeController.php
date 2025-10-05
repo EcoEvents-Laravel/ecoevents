@@ -39,6 +39,7 @@ class UserBadgeController extends Controller
         $user_badge = new UserBadge();
         $user_badge->user_id = $request->user_id;
         $user_badge->badge_id = $request->badge_id;
+        $user_badge->acquired_at = $request->acquired_at;
         $user_badge->save();
         return redirect()->route('user_badge.index');
     }
@@ -60,6 +61,7 @@ class UserBadgeController extends Controller
         $user_badge = UserBadge::findOrFail($id);
         $user_badge->user_id = $request->input('user_id');
         $user_badge->badge_id = $request->input('badge_id');
+        $user_badge->acquired_at = $request->input('acquired_at');
         $user_badge->save();
         return redirect()->route('user_badge.index');
     }
