@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_admin',
     ];
 
     /**
@@ -43,12 +44,13 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_admin' => 'boolean',
         ];
     }
 
     public function badges()
     {
-        return $this->hasMany(Badge::class, 'user_badges')->withTimestamps();
+        return $this->belongsToMany(Badge::class, 'user_badges')->withTimestamps()->withPivot('acquired_at');
     }
 
     public function events()
