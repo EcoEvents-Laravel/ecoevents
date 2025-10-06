@@ -32,6 +32,11 @@
             <input type="datetime-local" name="end_date" class="form-control" value="{{ $event->end_date->format('Y-m-d\TH:i') }}" required>
         </div>
         <div class="form-group">
+            <label for="address">Address</label>
+            <input id="address" name="address" value="{{ old('address', $event->address ?? '') }}" class="form-control" />
+            @error('address') <div class="text-danger">{{ $message }}</div> @enderror
+        </div>
+        <div class="form-group">
             <label>City</label>
             <input type="text" name="city" class="form-control" value="{{ $event->city }}" required>
         </div>
