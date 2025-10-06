@@ -8,6 +8,7 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\UserBadgeSeeder;
 use Database\Seeders\EventSeeder;
 use Database\Seeders\BadgeSeeder;
+use Database\Seeders\BlogSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -29,6 +30,7 @@ class DatabaseSeeder extends Seeder
             EventSeeder::class,
             BadgeSeeder::class,
             UserBadgeSeeder::class,
+            BlogSeeder::class,
         ]);
     }
 }

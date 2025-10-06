@@ -1,0 +1,50 @@
+/* path: resources/css/blog.css */
+
+/* Style pour la grille principale */
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2.5rem;
+}
+
+/* Le conteneur principal de la carte */
+.blog-card {
+    background: rgba(255, 255, 255, 0.6); /* Fond blanc semi-transparent */
+    backdrop-filter: blur(20px); /* L'effet de verre dépoli "futuriste" */
+    -webkit-backdrop-filter: blur(20px); /* Pour la compatibilité Safari */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 1.5rem; /* Bords très arrondis */
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Transition douce pour le hover */
+    transform: translateY(0);
+    padding: 1.5rem;
+    opacity: 0; /* Cachée par défaut pour l'animation d'apparition */
+    transform: translateY(30px); /* Légèrement décalée vers le bas pour l'animation */
+}
+
+/* Effet au survol */
+.blog-card:hover {
+    transform: translateY(-10px); /* La carte se soulève */
+    box-shadow: 0 16px 40px 0 rgba(31, 38, 135, 0.2);
+}
+
+/* Animation d'apparition */
+.blog-card.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.blog-card h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 0.75rem;
+}
+
+.blog-card .author-info {
+    display: flex;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}

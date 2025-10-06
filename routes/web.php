@@ -12,6 +12,7 @@ use App\Http\Controllers\CommentController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\OrganisationController;
+use App\Http\Controllers\BlogController;
 Auth::routes();
 Route::get('/', function () {
     return redirect()->route('login');
@@ -32,6 +33,14 @@ Route::resource('/event-types', EventTypeController::class);
 Route::resource('/tags', TagController::class);
 Route::resource('/organisations', App\Http\Controllers\OrganisationController::class);
 
+// Routes spécifiques AVANT les routes dynamiques {blog}
+Route::get('/blogs/gallery', [BlogController::class, 'gallery'])->name('blogs.gallery');
+Route::get('/blogs/create', [BlogController::class, 'create'])->name('blogs.create');
+
+// Routes publiques
+Route::get('/blogs', [BlogController::class, 'index'])->name('blogs.index');
+Route::get('/blogs/{blog}', [BlogController::class, 'show'])->name('blogs.show');
+
 
 
 Route::middleware('auth')->group(function () {
@@ -42,6 +51,10 @@ Route::middleware('auth')->group(function () {
         return view('Chatbot-AI');
     })->name('chatbot');
     Route::post('/chatbot', [ChatbotController::class, 'getResponse'])->name('chatbot.response');
+    Route::post('/blogs', [BlogController::class, 'store'])->name('blogs.store');
+    Route::get('/blogs/{blog}/edit', [BlogController::class, 'edit'])->name('blogs.edit');
+    Route::put('/blogs/{blog}', [BlogController::class, 'update'])->name('blogs.update');
+    Route::delete('/blogs/{blog}', [BlogController::class, 'destroy'])->name('blogs.destroy');
     
 });
 
