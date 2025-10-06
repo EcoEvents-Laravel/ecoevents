@@ -23,13 +23,7 @@ class BadgeController extends Controller
      */
     public function create()
     {
-        $request=Request();
-        $badge=new Badge();
-        $badge->name=$request->name;
-        $badge->description=$request->description;
-        $badge->icon=$request->icon;
-        $badge->create();
-        return redirect()->route('badge.index');
+        //return view('badge.create');
     }
 
     /**
@@ -46,8 +40,6 @@ class BadgeController extends Controller
             $badge->icon = $path;
         }
         Badge::create($request->validated());
-        //$userBadgeController=new UserBadgeController();
-        //$userBadgeController->store($request);
         $badge->save();
         return redirect()->route('badge.index');
     }

@@ -21,8 +21,8 @@
                             <thead class="table-success">
                                 <tr>
                                     <th scope="col" class="text-center">ID</th>
-                                    <th scope="col" class="text-center">User ID</th>
-                                    <th scope="col" class="text-center">Badge ID</th>
+                                    <th scope="col" class="text-center">User Name</th>
+                                    <th scope="col" class="text-center">Badge Name</th>
                                     <th scope="col" class="text-center">Acquired at</th>
                                     <th scope="col" class="text-center">Actions</th>
                                 </tr>
@@ -31,8 +31,8 @@
                                 @foreach ($user_badges as $user_badge)
                                     <tr>
                                         <td class="text-center">{{ $user_badge->id }}</td>
-                                        <td class="text-center">{{ $user_badge->user_id }}</td>
-                                        <td class="text-center">{{ $user_badge->badge_id }}</td>
+                                        <td class="text-center">{{ $user_badge->user->name }}</td>
+                                        <td class="text-center">{{ $user_badge->badge->name }}</td>
                                         <td class="text-center">{{ $user_badge->acquired_at }}</td>
                                         <td class="text-center">
                                             <!-- Edit Button trigger modal -->
