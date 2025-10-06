@@ -1,268 +1,375 @@
 @extends(!auth()->user() ? 'layouts.app' : 'layouts.front')
-@section(!auth()->user() ? 'title' : 'title', 'Blog - EcoEvents Knowledge Hub')
+@section('title', !auth()->user() ? 'Gestion des articles' : 'Knowledge Hub - Articles')
 
 @section('content')
 @if(!auth()->user())
 <div class="container py-5">
-    {{-- Hero Section --}}
-    <section class="bg-success text-white py-5 mb-4 rounded">
-        <div class="text-center">
-            <h1 class="display-4 fw-bold mb-3">
-                EcoEvents <span class="text-light">Knowledge Hub</span>
-            </h1>
-            <p class="lead mb-4">
-                Découvrez les dernières tendances en événementiel durable, technologies vertes et innovation sociale
-            </p>
-            {{-- Search Bar --}}
-            <form action="{{ route('blogs.index') }}" method="GET" class="row justify-content-center mb-3">
-                <div class="col-md-8">
-                    <div class="input-group">
-                        <input type="search" name="search" class="form-control" placeholder="Rechercher un article, un tag, un auteur..." value="{{ request('search') }}">
-                        <button class="btn btn-light" type="submit">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
-                </div>
-            </form>
-            @auth
-            <a href="{{ route('blogs.create') }}" class="btn btn-light fw-bold">
-                <i class="bi bi-plus-lg"></i> Créer un Article
-            </a>
-            @endauth
-        </div>
-    </section>
-
-    <div class="row">
-        {{-- Articles --}}
-        <main class="col-lg-8">
-            @forelse ($blogs as $blog)
-                <div class="card mb-4 shadow-sm">
-                    <div class="row g-0">
-                        <div class="col-md-5">
-                            <a href="{{ route('blogs.show', $blog) }}">
-                                <img src="https://picsum.photos/seed/{{ $blog->id }}/800/600" class="img-fluid rounded-start" alt="{{ $blog->title }}">
-                            </a>
-                        </div>
-                        <div class="col-md-7">
-                            <div class="card-body">
-                                {{-- Tags --}}
-                                <div class="mb-2">
-                                    @foreach($blog->tags->take(3) as $tag)
-                                        <span class="badge bg-success me-1">{{ $tag->name }}</span>
-                                    @endforeach
-                                </div>
-                                <h5 class="card-title">
-                                    <a href="{{ route('blogs.show', $blog) }}" class="text-decoration-none text-dark">{{ $blog->title }}</a>
-                                </h5>
-                                <p class="card-text">{{ Str::limit(strip_tags($blog->content), 180) }}</p>
-                                <div class="d-flex justify-content-between align-items-center mt-3">
-                                    <div class="d-flex align-items-center">
-                                        <span class="badge bg-primary rounded-circle me-2" style="width:2rem;height:2rem;display:flex;align-items:center;justify-content:center;">
-                                            {{ substr($blog->author->name, 0, 1) }}
-                                        </span>
-                                        <div>
-                                            <small class="text-muted">{{ $blog->author->name }}</small><br>
-                                            <small class="text-muted">
-                                                {{ $blog->publication_date?->format('d M Y') ?? 'Brouillon' }} •
-                                                {{ ceil(strlen(strip_tags($blog->content)) / 1000) }} min
-                                            </small>
-                                        </div>
-                                    </div>
-                                    @auth
-                                    <div>
-                                        <a href="{{ route('blogs.edit', $blog) }}" class="btn btn-sm btn-outline-primary me-1" title="Modifier">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <form action="{{ route('blogs.destroy', $blog) }}" method="POST" class="d-inline" onsubmit="return confirm('Supprimer cet article ?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Supprimer">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                    @endauth
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @empty
-                <div class="card text-center p-5">
-                    <h3 class="card-title mb-3">Aucun article pour le moment</h3>
-                    <p class="card-text mb-3">Soyez le premier à partager vos idées !</p>
-                    @auth
-                    <a href="{{ route('blogs.create') }}" class="btn btn-success">Créer le premier article</a>
-                    @endauth
-                </div>
-            @endforelse
-
-            {{-- Pagination --}}
-            @if($blogs->hasPages())
-            <div class="d-flex justify-content-center mt-4">
-                {{ $blogs->links('pagination::bootstrap-4') }}
-            </div>
-            @endif
-        </main>
-
-        {{-- Sidebar --}}
-        <aside class="col-lg-4">
-            <div class="card mb-4 sticky-top" style="top:2rem;">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="bi bi-tags"></i> Tags Populaires</h5>
-                    @php
-                        $popularTags = ['Durabilité', 'Innovation', 'Tech', 'Communauté', 'Éco-design', 'Événements'];
-                    @endphp
-                    <div>
-                        @foreach($popularTags as $tag)
-                            <a href="#" class="badge bg-secondary me-1 mb-1">#{{ $tag }}</a>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-            <div class="card mb-4 bg-success text-white">
-                <div class="card-body">
-                    <h5 class="card-title">📬 Newsletter EcoEvents</h5>
-                    <p class="card-text">Recevez nos meilleurs articles chaque semaine</p>
-                    <form>
-                        <input type="email" class="form-control mb-2" placeholder="votre@email.com">
-                        <button type="submit" class="btn btn-light w-100 text-success fw-bold">S'abonner</button>
-                    </form>
-                </div>
-            </div>
-        </aside>
-    </div>
+    <h2 class="mb-4">Gestion des Articles</h2>
+    <a href="{{ route('blogs.create') }}" class="btn btn-primary mb-3">Créer un Nouvel Article</a>
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Type</th>
+                <th>Author</th>
+                <th>Description</th>
+                <th>Tags</th>
+                <th>Start Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($blogs as $blog)
+                <tr>
+                    <td>{{ $blog->title }}</td>
+                    <td>{{ $blog->blogType->name ?? 'N/A' }}</td>
+                    <td>{{ optional($blog->author)->name ?? 'N/A' }}</td>
+                    <td>{{ $blog->description }}</td>
+                    <td>{{ optional($blog->tags)->count() ? $blog->tags->pluck('name')->implode(', ') : 'No tags' }}</td>
+                    <td>{{ \Carbon\Carbon::parse($blog->publication_date)->format('Y-m-d H:i') }}</td>
+                    <td>
+                        <a href="{{ route('blogs.show', $blog) }}" class="btn btn-info btn-sm">View</a>
+                        <a href="{{ route('blogs.edit', $blog) }}" class="btn btn-warning btn-sm">Edit</a>
+                        <form action="{{ route('blogs.destroy', $blog) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+    {{ $blogs->links() }}
 </div>
-@endsection
 @else
-<div class="container py-5">
-    {{-- Hero Section --}}
-    <section class="bg-success text-white py-5 mb-4 rounded">
-        <div class="text-center">
-            <h1 class="display-4 fw-bold mb-3">
-                EcoEvents <span class="text-light">Knowledge Hub</span>
+@push('styles')
+<style>
+    /* Variables CSS pour la cohérence */
+    :root {
+        --eco-primary: #10b981;
+        --eco-secondary: #3b82f6;
+        --eco-accent: #8b5cf6;
+        --eco-dark: #1f2937;
+        --eco-light: #f9fafb;
+    }
+
+    /* Hero Section avec Gradient Animé */
+    .hero-gradient {
+        background: linear-gradient(-45deg, #10b981, #3b82f6, #8b5cf6, #ec4899);
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
+    }
+
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* Card avec effet Glassmorphism */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    .glass-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+        border-color: var(--eco-primary);
+    }
+
+    /* Animation d'apparition au scroll */
+    .fade-in-up {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in-up.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Tag animé */
+    .tag-pill {
+        transition: all 0.3s ease;
+    }
+
+    .tag-pill:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    /* Image overlay */
+    .blog-image-container {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .blog-image-container::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .glass-card:hover .blog-image-container::after {
+        opacity: 1;
+    }
+
+    /* Bouton d'action flottant */
+    .action-btn {
+        opacity: 0;
+        transform: scale(0.8);
+        transition: all 0.3s ease;
+    }
+
+    .glass-card:hover .action-btn {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    /* Search bar moderne */
+    .search-container {
+        position: relative;
+    }
+
+    .search-container input:focus {
+        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+    }
+</style>
+@endpush
+<div class="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-green-50">
+    
+    {{-- Hero Section Dynamique --}}
+    <section class="hero-gradient text-white py-20 px-4 relative overflow-hidden">
+        <div class="absolute inset-0 bg-black opacity-40"></div>
+        <div class="container mx-auto relative z-10 text-center">
+            <h1 class="text-5xl md:text-7xl font-black mb-6 tracking-tight">
+                EcoEvents <span class="text-green-300">Knowledge Hub</span>
             </h1>
-            <p class="lead mb-4">
+            <p class="text-xl md:text-2xl mb-8 text-gray-100 max-w-3xl mx-auto font-light">
                 Découvrez les dernières tendances en événementiel durable, technologies vertes et innovation sociale
             </p>
-            {{-- Search Bar --}}
-            <form action="{{ route('blogs.index') }}" method="GET" class="row justify-content-center mb-3">
-                <div class="col-md-8">
-                    <div class="input-group">
-                        <input type="search" name="search" class="form-control" placeholder="Rechercher un article, un tag, un auteur..." value="{{ request('search') }}">
-                        <button class="btn btn-light" type="submit">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
-                </div>
-            </form>
+            
+            {{-- Search Bar Moderne --}}
+            <div class="max-w-2xl mx-auto search-container">
+                <form action="{{ route('blogs.index') }}" method="GET" class="relative">
+                    <input 
+                        type="search" 
+                        name="search" 
+                        placeholder="Rechercher un article, un tag, un auteur..." 
+                        value="{{ request('search') }}"
+                        class="w-full px-6 py-4 pr-14 rounded-full text-gray-800 text-lg focus:outline-none transition-all duration-300"
+                    >
+                    <button type="submit" class="absolute right-2 top-1/2 -translate-y-1/2 bg-green-500 hover:bg-green-600 text-white p-3 rounded-full transition-all duration-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </button>
+                </form>
+            </div>
+
             @auth
-            <a href="{{ route('blogs.create') }}" class="btn btn-light fw-bold">
-                <i class="bi bi-plus-lg"></i> Créer un Article
-            </a>
+            <div class="mt-8">
+                <a href="{{ route('blogs.create') }}" class="inline-flex items-center gap-2 bg-white text-green-600 font-bold px-8 py-4 rounded-full hover:bg-green-50 transform hover:scale-105 transition-all duration-300 shadow-xl">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Créer un Article
+                </a>
+            </div>
             @endauth
         </div>
     </section>
-    <div class="row">
-        {{-- Articles --}}
-        <main class="col-lg-8">
-            @forelse ($blogs as $blog)
-                <div class="card mb-4 shadow-sm">
-                    <div class="row g-0">
-                        <div class="col-md-5">
-                            <a href="{{ route('blogs.show', $blog) }}">
-                                <img src="https://picsum.photos/seed/{{ $blog->id }}/800/600" class="img-fluid rounded-start" alt="{{ $blog->title }}">
-                            </a>
-                        </div>
-                        <div class="col-md-7">
-                            <div class="card-body">
-                                {{-- Tags --}}
-                                <div class="mb-2">
-                                    @foreach($blog->tags->take(3) as $tag)
-                                        <span class="badge bg-success me-1">{{ $tag->name }}</span>
-                                    @endforeach
+
+    {{-- Main Content --}}
+    <div class="container mx-auto px-4 py-16">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            {{-- Articles Column --}}
+            <main class="lg:col-span-2">
+                <div class="space-y-8">
+                    @forelse ($blogs as $blog)
+                        <article class="glass-card rounded-3xl overflow-hidden fade-in-up" data-delay="{{ $loop->index * 100 }}">
+                            <div class="grid md:grid-cols-5 gap-0">
+                                
+                                {{-- Image Section --}}
+                                <div class="md:col-span-2 blog-image-container">
+                                    <a href="{{ route('blogs.show', $blog) }}">
+                                        <img 
+                                            src="https://picsum.photos/seed/{{ $blog->id }}/800/600" 
+                                            alt="{{ $blog->title }}" 
+                                            class="w-full h-64 md:h-full object-cover transition-transform duration-700 hover:scale-110"
+                                            loading="lazy"
+                                        >
+                                    </a>
                                 </div>
-                                <h5 class="card-title">
-                                    <a href="{{ route('blogs.show', $blog) }}" class="text-decoration-none text-dark">{{ $blog->title }}</a>
-                                </h5>
-                                <p class="card-text">{{ Str::limit(strip_tags($blog->content), 180) }}</p>
-                                <div class="d-flex justify-content-between align-items-center mt-3">
-                                    <div class="d-flex align-items-center">
-                                        <span class="badge bg-primary rounded-circle me-2" style="width:2rem;height:2rem;display:flex;align-items:center;justify-content:center;">
-                                            {{ substr($blog->author->name, 0, 1) }}
-                                        </span>
-                                        <div>
-                                            <small class="text-muted">{{ $blog->author->name }}</small><br>
-                                            <small class="text-muted">
-                                                {{ $blog->publication_date?->format('d M Y') ?? 'Brouillon' }} •
-                                                {{ ceil(strlen(strip_tags($blog->content)) / 1000) }} min
-                                            </small>
-                                        </div>
+
+                                {{-- Content Section --}}
+                                <div class="md:col-span-3 p-6 md:p-8 relative">
+                                    
+                                    {{-- Tags --}}
+                                    <div class="flex flex-wrap gap-2 mb-4">
+                                        @foreach($blog->tags->take(3) as $tag)
+                                            <span class="tag-pill inline-flex items-center gap-1 bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">
+                                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                </svg>
+                                                {{ $tag->name }}
+                                            </span>
+                                        @endforeach
                                     </div>
-                                    @auth
-                                    <div>
-                                        <a href="{{ route('blogs.edit', $blog) }}" class="btn btn-sm btn-outline-primary me-1" title="Modifier">
-                                            <i class="bi bi-pencil"></i>
+
+                                    {{-- Title --}}
+                                    <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-3 leading-tight hover:text-green-600 transition-colors duration-300">
+                                        <a href="{{ route('blogs.show', $blog) }}">
+                                            {{ $blog->title }}
                                         </a>
-                                        <form action="{{ route('blogs.destroy', $blog) }}" method="POST" class="d-inline" onsubmit="return confirm('Supprimer cet article ?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Supprimer">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
+                                    </h2>
+
+                                    {{-- Excerpt --}}
+                                    <p class="text-gray-600 text-base leading-relaxed mb-6">
+                                        {{ Str::limit(strip_tags($blog->content), 180) }}
+                                    </p>
+
+                                    {{-- Meta Info --}}
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-3">
+                                            <div class="h-10 w-10 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center text-white font-bold text-sm">
+                                                {{ substr($blog->author->name, 0, 1) }}
+                                            </div>
+                                            <div>
+                                                <p class="font-semibold text-gray-800 text-sm">{{ $blog->author->name }}</p>
+                                                <p class="text-gray-500 text-xs">
+                                                    {{ $blog->publication_date?->format('d M Y') ?? 'Brouillon' }}
+                                                    <span class="mx-1">•</span>
+                                                    {{ ceil(strlen(strip_tags($blog->content)) / 1000) }} min
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        {{-- Actions (visible au hover) --}}
+                                        @auth
+                                        <div class="flex gap-2 action-btn">
+                                            <a href="{{ route('blogs.edit', $blog) }}" class="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-300" title="Modifier">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                </svg>
+                                            </a>
+                                            <form action="{{ route('blogs.destroy', $blog) }}" method="POST" onsubmit="return confirm('Supprimer cet article ?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-300" title="Supprimer">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        </div>
+                                        @endauth
                                     </div>
-                                    @endauth
-                                </div> 
+                                </div>
+                            </div>
+                        </article>
+                    @empty
+                        <div class="glass-card rounded-3xl p-16 text-center">
+                            <div class="max-w-md mx-auto">
+                                <svg class="w-24 h-24 mx-auto text-gray-300 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                                </svg>
+                                <h3 class="text-3xl font-bold text-gray-900 mb-4">Aucun article pour le moment</h3>
+                                <p class="text-gray-600 mb-6">Soyez le premier à partager vos idées !</p>
+                                @auth
+                                <a href="{{ route('blogs.create') }}" class="inline-flex items-center gap-2 bg-green-500 text-white px-6 py-3 rounded-full hover:bg-green-600 transition-all duration-300">
+                                    Créer le premier article
+                                </a>
+                                @endauth
                             </div>
                         </div>
+                    @endforelse
+
+                    {{-- Pagination Élégante --}}
+                    @if($blogs->hasPages())
+                    <div class="flex justify-center mt-12">
+                        {{ $blogs->links('pagination::tailwind') }}
+                    </div>
+                    @endif
+                </div>
+            </main>
+
+            {{-- Sidebar --}}
+            <aside class="space-y-6">
+                
+                {{-- Tags Populaires --}}
+                <div class="glass-card rounded-2xl p-6 sticky top-8">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                        </svg>
+                        Tags Populaires
+                    </h3>
+                    <div class="flex flex-wrap gap-2">
+                        @php
+                            $popularTags = ['Durabilité', 'Innovation', 'Tech', 'Communauté', 'Éco-design', 'Événements'];
+                        @endphp
+                        @foreach($popularTags as $tag)
+                            <a href="#" class="tag-pill bg-gray-100 text-gray-700 hover:bg-green-100 hover:text-green-800 text-sm font-medium px-4 py-2 rounded-full">
+                                #{{ $tag }}
+                            </a>
+                        @endforeach
                     </div>
                 </div>
-            @empty
-                <div class="card text-center p-5">
-                    <h3 class="card-title mb-3">Aucun article pour le moment</h3>
-                    <p class="card-text mb-3">Soyez le premier à partager vos idées !</p>
-                    @auth
-                    <a href="{{ route('blogs.create') }}" class="btn btn-success">Créer le    premier article</a>
-                    @endauth
-                </div>
-            @endforelse
 
-            {{-- Pagination --}}
-            @if($blogs->hasPages())
-            <div class="d-flex justify-content-center mt-4">
-                {{ $blogs->links('pagination::bootstrap-4') }}
-            </div>
-            @endif
-        </main>
-
-        {{-- Sidebar --}}
-        <aside class="col-lg-4">
-            <div class="card mb-4 sticky-top" style="top:2rem;">    
-                <div class="card-body">
-                    <h5 class="card-title"><i class="bi bi-tags"></i> Tags Populaires</h5>
-                    @php
-                        $popularTags = ['Durabilité', 'Innovation', 'Tech', 'Communauté', 'Éco-design', 'Événements'];
-                    @endphp
-                    <div>
-                        @foreach($popularTags as $tag)
-                            <a href="#" class="badge bg-secondary me-1 mb-1">#{{ $tag }}</a>
-                        @endforeach
-                    </div>  
-                </div>
-            </div>
-            <div class="card mb-4 bg-success text-white">
-                <div class="card-body">
-                    <h5 class="card-title">📬 Newsletter EcoEvents</h5>
-                    <p class="card-text">Recevez nos meilleurs articles chaque semaine</p>
-                    <form action="#" method="POST" class="d-flex">
-                        <input type="email" class="form-control me-2" placeholder="Votre email" required>
-                        <button type="submit" class="btn btn-light">S'abonner</button>
+                {{-- Newsletter --}}
+                <div class="glass-card rounded-2xl p-6 bg-gradient-to-br from-green-500 to-blue-600 text-white">
+                    <h3 class="text-xl font-bold mb-3">📬 Newsletter EcoEvents</h3>
+                    <p class="text-sm mb-4 text-green-50">Recevez nos meilleurs articles chaque semaine</p>
+                    <form class="space-y-3">
+                        <input type="email" placeholder="votre@email.com" class="w-full px-4 py-2 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-white">
+                        <button type="submit" class="w-full bg-white text-green-600 font-semibold py-2 rounded-lg hover:bg-green-50 transition-colors duration-300">
+                            S'abonner
+                        </button>
                     </form>
                 </div>
-            </div>
-        </aside>
+            </aside>
+
+        </div>
     </div>
 </div>
-@endsection
+<script>
+    // Animation au scroll
+    document.addEventListener('DOMContentLoaded', function() {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, entry.target.dataset.delay || 0);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in-up').forEach(el => {
+            observer.observe(el);
+        });
+    });
+</script>
 @endif
+@endsection

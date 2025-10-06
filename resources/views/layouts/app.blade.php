@@ -43,6 +43,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('organisations.index') }}">Organisations</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('blogs.index') }}">Blogs</a>
+                    </li>
                 </ul>
 
                 <!-- Liens à droite -->
