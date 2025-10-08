@@ -11,10 +11,26 @@ use Illuminate\Support\Facades\Log;
 
 class EventController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $events = Event::with(['eventType', 'tags'])->latest()->paginate(10);
-        return view('events.index', compact('events'));
+        $query = Event::with(['eventType', 'tags']);
+
+        // Search by title
+        if ($request->filled('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        // Filter by event type
+        if ($request->filled('event_type_id')) {
+            $query->where('event_type_id', $request->event_type_id);
+        }
+
+
+        $events = $query->latest()->paginate(10)->appends($request->query());
+        $eventTypes = EventType::all();
+        $tags = Tag::all();
+
+        return view('events.index', compact('events', 'eventTypes', 'tags'));
     }
 
     public function create()
