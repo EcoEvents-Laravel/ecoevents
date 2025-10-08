@@ -64,12 +64,21 @@
                             </div>
                             <div class="modal-body">
                                 <div class="mb-3">
-                                    <label for="user_id_create" class="form-label">User ID</label>
-                                    <input type="number" class="form-control" id="user_id_create" name="user_id" required>
+                                    <label for="user_id_create" class="form-label">User</label>
+                                    <select class="form-select" id="user_id_create" name="user_id" required>
+                                        <option value="" disabled selected>Select a user</option>
+                                        @foreach ($users as $user)
+                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="badge_id_create" class="form-label">Badge ID</label>
-                                    <input type="number" class="form-control" id="badge_id_create" name="badge_id" required>
+                                    <label for="badge_id_create" class="form-label">Badge</label>
+                                    <select class="form-select" id="badge_id_create"  name="badge_id" required>
+                                        @foreach($badges as $badge)
+                                           <option value="{{$badge->id}}">{{$badge->name}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="mb-3">
                                     <label for="acquired_at_create" class="form-label">Acquired At</label>
@@ -100,12 +109,20 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="mb-3">
-                                        <label for="user_id{{ $user_badge->id }}" class="form-label">User ID</label>
-                                        <input type="number" class="form-control" id="user_id{{ $user_badge->id }}" name="user_id" value="{{ $user_badge->user_id }}" required>
+                                        <label for="user_id{{ $user_badge->id }}" class="form-label">User Name</label>
+                                        <select class="form-select" id="user_id{{ $user_badge->id }}" name="user_id" required>
+                                            @foreach($users as $user)
+                                                <option value="{{ $user->id }}" {{ $user->id == $user_badge->user_id ? 'selected' : '' }}>{{ $user->name }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="badge_id{{ $user_badge->id }}" class="form-label">Badge ID</label>
-                                        <input type="number" class="form-control" id="badge_id{{ $user_badge->id }}" name="badge_id" value="{{ $user_badge->badge_id }}" required>
+                                        <label for="badge_id{{ $user_badge->id }}" class="form-label">Badge</label>
+                                        <select class="form-select" id="badge_id{{ $user_badge->id }}" name="badge_id" required>
+                                            @foreach($badges as $badge)
+                                                <option value="{{ $badge->id }}" {{ $badge->id == $user_badge->badge_id ? 'selected' : '' }}>{{ $badge->name }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                     <div class="mb-3">
                                         <label for="acquired_at{{ $user_badge->id }}" class="form-label">Acquired At</label>
