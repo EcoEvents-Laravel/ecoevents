@@ -77,7 +77,7 @@ body{background: linear-gradient(135deg,  rgba(226,226,226,1) 0%,rgba(219,219,21
 
 
     <!-- Search and Filter Form -->
-    <form method="GET" action="{{ route('events.index') }}" class="mb-4">
+    <form method="GET" action="{{ route('events.index') }}" class="mb-4 flex justify-center">
         <div class="flex flex-col md:flex-row gap-4">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Search events..." class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
             <select name="event_type_id" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
