@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Badge;
+use App\Models\UserBadge;
 use App\Http\Controllers\UserBadgeController;
 use App\Http\Requests\BadgeRequest;
 
@@ -15,7 +16,8 @@ class BadgeController extends Controller
     public function index()
     {
         $badges = Badge::all(); // Fetch badges from the database
-        return view('badge.index', compact('badges'));
+        $userBadges = UserBadge::all(); // Fetch user badges from the database
+        return view('badge.index', compact('badges', 'userBadges'));
     }
 
     /**
