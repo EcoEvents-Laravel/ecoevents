@@ -28,7 +28,6 @@
                     <td>{{ optional($blog->tags)->count() ? $blog->tags->pluck('name')->implode(', ') : 'No tags' }}</td>
                     <td>{{ \Carbon\Carbon::parse($blog->publication_date)->format('Y-m-d H:i') }}</td>
                     <td>
-                        <a href="{{ route('blogs.show', $blog) }}" class="btn btn-info btn-sm">View</a>
                         <a href="{{ route('blogs.edit', $blog) }}" class="btn btn-warning btn-sm">Edit</a>
                         <form action="{{ route('blogs.destroy', $blog) }}" method="POST" style="display:inline;">
                             @csrf

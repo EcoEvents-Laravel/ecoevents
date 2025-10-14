@@ -1,5 +1,4 @@
-{{-- resources/views/blogs/show.blade.php --}}
-@extends('layouts.app')
+@extends('layouts.front')
 
 @section('title', $blog->title . ' - EcoEvents Blog')
 
@@ -28,10 +27,6 @@
         object-fit: cover;
         transform: translateY(0);
         transition: transform 0.1s ease-out;
-    }
-    .comment-card {
-        background: #f8f9fa;
-        border-left: 4px solid #10b981;
     }
 </style>
 @endpush
@@ -80,16 +75,16 @@
             <div class="col-lg-1 d-none d-lg-block">
                 <div class="sticky-top" style="top:100px;">
                     <div class="d-flex flex-column gap-2">
-                        <button class="btn btn-primary rounded-circle mb-2 share-btn" title="Partager sur Twitter">
+                        <button class="btn btn-outline-primary rounded-circle mb-2 share-btn" title="Partager sur Twitter">
                             <i class="bi bi-twitter"></i>
                         </button>
-                        <button class="btn btn-primary rounded-circle mb-2 share-btn" title="Partager sur Facebook">
+                        <button class="btn btn-outline-primary rounded-circle mb-2 share-btn" title="Partager sur Facebook">
                             <i class="bi bi-facebook"></i>
                         </button>
-                        <button class="btn btn-success rounded-circle mb-2 share-btn" title="Partager sur WhatsApp">
+                        <button class="btn btn-outline-success rounded-circle mb-2 share-btn" title="Partager sur WhatsApp">
                             <i class="bi bi-whatsapp"></i>
                         </button>
-                        <button class="btn btn-dark rounded-circle mb-2 share-btn" title="Copier le lien">
+                        <button class="btn btn-outline-dark rounded-circle mb-2 share-btn" title="Copier le lien">
                             <i class="bi bi-link-45deg"></i>
                         </button>
                     </div>
@@ -116,9 +111,9 @@
                         <div class="mt-4 pt-3 border-top d-lg-none">
                             <h5 class="text-muted mb-2">Partager</h5>
                             <div class="d-flex gap-2">
-                                <button class="btn btn-primary rounded-circle share-btn"><i class="bi bi-twitter"></i></button>
-                                <button class="btn btn-primary rounded-circle share-btn"><i class="bi bi-facebook"></i></button>
-                                <button class="btn btn-success rounded-circle share-btn"><i class="bi bi-whatsapp"></i></button>
+                                <button class="btn btn-outline-primary rounded-circle share-btn"><i class="bi bi-twitter"></i></button>
+                                <button class="btn btn-outline-primary rounded-circle share-btn"><i class="bi bi-facebook"></i></button>
+                                <button class="btn btn-outline-success rounded-circle share-btn"><i class="bi bi-whatsapp"></i></button>
                             </div>
                         </div>
                     </div>
@@ -134,9 +129,9 @@
                                 <button class="btn btn-success">Publier le commentaire</button>
                             </div>
                         </div>
-                        <div class="mb-3 comment-card p-3 rounded">
+                        <div class="mb-3 card p-3 rounded-3 border-start border-success">
                             <div class="d-flex align-items-start gap-3">
-                                <div class="rounded-circle bg-gradient p-2 text-white fw-bold flex-shrink-0" style="background: linear-gradient(135deg,#a78bfa,#f472b6);width:48px;height:48px;display:flex;align-items:center;justify-content:center;">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold flex-shrink-0 text-white" style="background: linear-gradient(135deg,#a78bfa,#f472b6);width:48px;height:48px;">
                                     M
                                 </div>
                                 <div>
@@ -149,9 +144,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="mb-3 comment-card p-3 rounded">
+                        <div class="mb-3 card p-3 rounded-3 border-start border-success">
                             <div class="d-flex align-items-start gap-3">
-                                <div class="rounded-circle bg-gradient p-2 text-white fw-bold flex-shrink-0" style="background: linear-gradient(135deg,#60a5fa,#22d3ee);width:48px;height:48px;display:flex;align-items:center;justify-content:center;">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold flex-shrink-0 text-white" style="background: linear-gradient(135deg,#60a5fa,#22d3ee);width:48px;height:48px;">
                                     J
                                 </div>
                                 <div>
