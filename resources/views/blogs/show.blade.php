@@ -100,21 +100,6 @@
             <main class="col-lg-8">
                 <div class="card shadow mb-4">
                     <div class="card-body">
-                        {{-- Actions Admin --}}
-                        @auth
-                        <div class="d-flex gap-2 mb-4 pb-3 border-bottom">
-                            <a href="{{ route('blogs.edit', $blog) }}" class="btn btn-primary">
-                                <i class="bi bi-pencil"></i> Modifier
-                            </a>
-                            <form action="{{ route('blogs.destroy', $blog) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet article ?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger">
-                                    <i class="bi bi-trash"></i> Supprimer
-                                </button>
-                            </form>
-                        </div>
-                        @endauth
 
                         <div class="mb-4 article-content">
                             {!! nl2br(e($blog->content)) !!}
