@@ -205,6 +205,75 @@
     @else
         <div class="container mx-auto px-4 py-8">
             <h1 class="text-3xl font-bold text-green-600 mb-6">Badges EcoEvents</h1>
+            <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div class="flex items-center w-full sm:w-1/2">
+                    <label for="badgeSearch" class="sr-only">Search badges</label>
+                    <input id="badgeSearch" type="search" placeholder="Search badges by name or description..."
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                        autocomplete="off">
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <button id="clearBadgeSearch" type="button"
+                        class="px-3 py-2 bg-green-50 text-green-700 border border-green-200 rounded-md hover:bg-green-100">Clear</button>
+                </div>
+            </div>
+
+            <script>
+                (function () {
+                    const input = document.getElementById('badgeSearch');
+                    const clearBtn = document.getElementById('clearBadgeSearch');
+
+                    function getGrid() {
+                        return document.querySelector('.grid.grid-cols-1') || document.querySelector('.grid');
+                    }
+
+                    function updateNoResults(grid) {
+                        let noEl = document.getElementById('noBadgesMessage');
+                        const anyVisible = Array.from(grid.children).some(c => c.style.display !== 'none');
+                        if (!anyVisible) {
+                            if (!noEl) {
+                                noEl = document.createElement('div');
+                                noEl.id = 'noBadgesMessage';
+                                noEl.className = 'col-span-full text-center text-gray-500';
+                                noEl.textContent = 'No badges match your search.';
+                                grid.parentNode.insertBefore(noEl, grid.nextSibling);
+                            }
+                        } else {
+                            if (noEl) noEl.remove();
+                        }
+                    }
+
+                    function filterBadges() {
+                        const q = input.value.trim().toLowerCase();
+                        const grid = getGrid();
+                        if (!grid) return;
+                        const cards = Array.from(grid.children);
+                        cards.forEach(card => {
+                            const nameEl = card.querySelector('h2');
+                            const descEl = card.querySelector('p');
+                            const name = nameEl ? nameEl.textContent.toLowerCase() : '';
+                            const desc = descEl ? descEl.textContent.toLowerCase() : '';
+                            const match = q === '' || name.includes(q) || desc.includes(q);
+                            card.style.display = match ? '' : 'none';
+                        });
+                        updateNoResults(grid);
+                    }
+
+                    if (input) {
+                        input.addEventListener('input', filterBadges);
+                        clearBtn.addEventListener('click', function () {
+                            input.value = '';
+                            filterBadges();
+                            input.focus();
+                        });
+                        // run once on load to ensure proper state
+                        document.addEventListener('DOMContentLoaded', filterBadges);
+                        // also run immediately in case DOMContentLoaded already fired
+                        filterBadges();
+                    }
+                })();
+            </script>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 @foreach ($badges as $badge)
                     @foreach ($userBadges as $userBadge)
