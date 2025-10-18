@@ -1,8 +1,8 @@
-@extends(!auth()->user() ? 'layouts.app' : 'layouts.front')
-@section(!auth()->user() ? 'Badges EcoEvents' : 'Badges EcoEvents')
+@extends(auth()->user()->role === 'admin' ? 'layouts.app' : 'layouts.front')
+@section(auth()->user()->role === 'admin' ? 'Badges EcoEvents' : 'Badges EcoEvents')
 
 @section('content')
-    @if (!auth()->user())
+    @if (auth()->user()->role === 'admin')
         <div class="container py-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1 class="h3 text-success fw-bold">EcoEvents Badges</h1>

@@ -1,17 +1,17 @@
-@extends(!auth()->user() ? 'layouts.app' : 'layouts.front')
-@section('title',!auth()->user()? 'Gestion des events':'Events')
+@extends(auth()->user()->role === 'admin' ? 'layouts.app' : 'layouts.front')
+@section('title', auth()->user()->role === 'admin' ? 'Gestion des événements' : 'Events - EcoEvents')
 
 @section('content')
-@if(!auth()->user())
-    <h1>Events</h1>
-    <a href="{{ route('events.create') }}" class="btn btn-primary">Create New Event</a>
+@if(auth()->user()->role === 'admin')
+    <h1>Gestion des Événements</h1>
+    <a href="{{ route('events.create') }}" class="btn btn-primary">Créer un Nouvel Événement</a>
     <table class="table mt-3">
         <thead>
             <tr>
-                <th>Title</th>
+                <th>Titre</th>
                 <th>Type</th>
                 <th>Tags</th>
-                <th>Start Date</th>
+                <th>Date de Début</th>
                 <th>Actions</th>
             </tr>
         </thead>

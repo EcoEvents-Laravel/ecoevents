@@ -1,8 +1,8 @@
-@extends(!auth()->user() ? 'layouts.app' : 'layouts.front')
-@section('title', !auth()->user() ? 'Gestion des articles' : 'Knowledge Hub - Articles')
+@extends(auth()->user()->role === 'admin' ? 'layouts.app' : 'layouts.front')
+@section('title', auth()->user()->role === 'admin' ? 'Gestion des Articles' : 'Knowledge Hub - Articles EcoEvents')
 
 @section('content')
-@if(!auth()->user())
+@if(auth()->user()->role === 'admin')
 <div class="container py-5">
     <h2 class="mb-4">Gestion des Articles</h2>
     <a href="{{ route('blogs.create') }}" class="btn btn-primary mb-3">Créer un Nouvel Article</a>
