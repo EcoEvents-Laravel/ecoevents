@@ -1,28 +1,68 @@
 @extends(auth()->user()->role === 'admin' ? 'layouts.app' : 'layouts.front')
-@section('title', auth()->user()->role === 'admin' ? 'Gestion des événements' : 'Events - EcoEvents')
+
+@section('title', 'Dashboard')
 
 @section('content')
 @if(auth()->user()->role === 'admin')
-    <h1>Gestion des Événements</h1>
-    <a href="{{ route('events.create') }}" class="btn btn-primary">Créer un Nouvel Événement</a>
+    <h1 class="mb-4">Events</h1>
+    <a href="{{ route('events.create') }}" class="btn btn-primary mb-3">Create New Event</a>
+
+    <!-- Advanced Search Form -->
+    <form method="GET" action="{{ route('events.index') }}" class="mb-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <!-- Search by Title -->
+                    <div class="col-md-4 mb-3">
+                        <label for="search" class="form-label">Search by Title</label>
+                        <input type="text" name="search" id="search" class="form-control" value="{{ request('search') }}" placeholder="Enter event title">
+                    </div>
+
+                    <!-- Event Type -->
+                    <div class="col-md-4 mb-3">
+                        <label for="event_type_id" class="form-label">Event Type</label>
+                        <select name="event_type_id" id="event_type_id" class="form-control">
+                            <option value="">All Types</option>
+                            @foreach($eventTypes as $type)
+                                <option value="{{ $type->id }}" {{ request('event_type_id') == $type->id ? 'selected' : '' }}>
+                                    {{ $type->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-md-4 mb-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary me-2">Search</button>
+                    <a href="{{ route('events.index') }}" class="btn btn-secondary">Clear Filters</a>
+                    </div>
+
+                </div>
+
+                
+            </div>
+        </div>
+    </form>
+
+    <!-- Events Table -->
     <table class="table mt-3">
         <thead>
             <tr>
-                <th>Titre</th>
+                <th>Title</th>
                 <th>Type</th>
                 <th>Tags</th>
-                <th>Date de Début</th>
+                <th>Start Date</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($events as $event)
+            @forelse($events as $event)
                 <tr>
                     <td>{{ $event->title }}</td>
                     <td>{{ $event->eventType->name ?? 'N/A' }}</td>
-                    <td>{{ optional($event->tags)->count() ? $event->tags->pluck('name')->implode(', ') : 'No tags' }}</td>
+                    <td>{{ $event->tags->pluck('name')->implode(', ') }}</td>
                     <td>{{ \Carbon\Carbon::parse($event->start_date)->format('Y-m-d H:i') }}</td>
                     <td>
+                        <a href="{{ route('events.show', $event) }}" class="btn btn-info btn-sm">View</a>
                         <a href="{{ route('events.edit', $event) }}" class="btn btn-warning btn-sm">Edit</a>
                         <form action="{{ route('events.destroy', $event) }}" method="POST" style="display:inline;">
                             @csrf
@@ -31,12 +71,16 @@
                         </form>
                     </td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="5" class="text-center">No events found.</td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
     {{ $events->links() }}
 @else
-<style>
+    <style>
 body{background: linear-gradient(135deg,  rgba(226,226,226,1) 0%,rgba(219,219,219,1) 50%,rgba(209,209,209,1) 50%,rgba(209,209,209,1) 50%,rgba(254,254,254,1) 100%) center/cover no-repeat;min-height:100vh}
 .card{width:360px;background:#fff;border-radius:15px;box-shadow:0 5px 20px rgba(0,0,0,.1);transition:.3s;font-family:'Segoe UI',sans-serif;margin:20px auto;overflow:hidden;position:relative;cursor:pointer}
 .card:hover{transform:translateY(-5px);box-shadow:0 10px 25px rgba(0,0,0,.15)}
@@ -76,7 +120,7 @@ body{background: linear-gradient(135deg,  rgba(226,226,226,1) 0%,rgba(219,219,21
 
 
     <!-- Search and Filter Form -->
-    <form method="GET" action="{{ route('events.index') }}" class="mb-4 flex justify-center">
+    <form method="GET" action="{{ route('events.index') }}" class="mb-4">
         <div class="flex flex-col md:flex-row gap-4">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Search events..." class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
             <select name="event_type_id" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -110,9 +154,9 @@ body{background: linear-gradient(135deg,  rgba(226,226,226,1) 0%,rgba(219,219,21
                      <span class="feat">{{ $event->tags->pluck('name')->implode(', ') }}</span>
                     </div>
                     <p class="stock">
-                        {{ \Carbon\Carbon::parse($event->start_date)->format('d/M') }} {{ \Carbon\Carbon::parse($event->start_date)->format('H:i') }} -
+                        {{ \Carbon\Carbon::parse($event->start_date)->format('d M') }} {{ \Carbon\Carbon::parse($event->start_date)->format('H:i') }} -
                         @if ($event->end_date)
-                            {{ \Carbon\Carbon::parse($event->end_date)->format('d/M H:i') }}
+                            {{ \Carbon\Carbon::parse($event->end_date)->format('d M H:i') }}
                         @else
                             {{ \Carbon\Carbon::parse($event->start_date)->format('H:i') }}
                         @endif

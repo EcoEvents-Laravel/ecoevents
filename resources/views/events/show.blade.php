@@ -1,8 +1,25 @@
-@extends('layouts.front')
-
-@section('title', $event->title)
+@extends(auth()->user()->role === 'admin' ? 'layouts.app' : 'layouts.front')
 
 @section('content')
+@if(auth()->user()->role === 'admin')
+    <h1>{{ $event->title }}</h1>
+
+    @if($event->banner_url)
+        <img src="{{ asset('storage/' . $event->banner_url) }}" alt="Event Banner" style="max-width: 400px;">
+    @else
+        <p>No banner image available.</p>
+    @endif
+
+    <p><strong>Description:</strong> {{ $event->description }}</p>
+    <p><strong>Type:</strong> {{ $event->eventType->name ?? 'N/A' }}</p>
+    <p><strong>Tags:</strong> {{ $event->tags->pluck('name')->implode(', ') }}</p>
+    <p><strong>Start:</strong> {{ \Carbon\Carbon::parse($event->start_date)->format('Y-m-d H:i') }}</p>
+    <p><strong>End:</strong> {{ \Carbon\Carbon::parse($event->end_date)->format('Y-m-d H:i') }}</p>
+    <p><strong>Location:</strong> {{ $event->address }}, {{ $event->city }}, {{ $event->country }}</p>
+    <p><strong>Maximum Participants:</strong> {{ $event->max_participants ?? 'N/A' }}</p>
+
+    <a href="{{ route('events.index') }}" class="btn btn-secondary">Back</a>
+@else
 <div class="container mx-auto px-4 py-8">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <!-- Colonne principale -->
@@ -120,4 +137,5 @@
         </aside>
     </div>
 </div>
+@endif
 @endsection

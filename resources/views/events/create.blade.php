@@ -60,11 +60,12 @@
             <label>Tags</label>
             @foreach($tags as $tag)
                 <div class="form-check">
-                    <input type="checkbox" name="tag_id" value="{{ $tag->id }}" class="form-check-input">
+                    <input type="checkbox" name="tags[]" value="{{ $tag->id }}" class="form-check-input">
                     <label class="form-check-label">{{ $tag->name }}</label>
                 </div>
             @endforeach
         </div>
         <button type="submit" class="btn btn-success">Save</button>
+        <a href="{{ route('events.index') }}" class="btn btn-secondary">Back</a>
     </form>
 @endsection

@@ -81,14 +81,18 @@
                                        class="btn btn-outline-primary btn-sm">
                                         <i class="fas fa-eye me-1"></i>Voir
                                     </a>
-                                    <button type="button" onclick="populateEditForm({{ $organisation->id }})"
+                                    <button type="button" onclick="window.location.href='{{ route('organisations.edit', $organisation) }}'"
                                             class="btn btn-outline-warning btn-sm">
                                         <i class="fas fa-edit me-1"></i>Modifier
                                     </button>
-                                    <button type="button" onclick="populateDeleteForm({{ $organisation->id }})"
+                                    <button type="button" onclick="event.preventDefault(); document.getElementById('delete-form-{{ $organisation->id }}').submit();"
                                             class="btn btn-outline-danger btn-sm">
                                         <i class="fas fa-trash me-1"></i>Supprimer
                                     </button>
+                                    <form id="delete-form-{{ $organisation->id }}" action="{{ route('organisations.destroy', $organisation) }}" method="POST" class="d-none">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
                                 </div>
                             </td>
                         </tr>

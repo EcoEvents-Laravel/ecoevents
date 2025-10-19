@@ -49,24 +49,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 text-end">
-                    <div class="btn-group" role="group">
-                        <a href="{{ route('organisations.edit', $organisation) }}"
-                           class="btn btn-warning d-flex align-items-center gap-2">
-                            <i class="fas fa-edit"></i>
-                            Modifier
-                        </a>
-                        <form action="{{ route('organisations.destroy', $organisation) }}" method="POST" class="d-inline"
-                              onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette organisation ?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger d-flex align-items-center gap-2">
-                                <i class="fas fa-trash"></i>
-                                Supprimer
-                            </button>
-                        </form>
-                    </div>
-                </div>
             </div>
         </div>
 
