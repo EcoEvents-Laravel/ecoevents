@@ -109,6 +109,10 @@
                             Événements
                             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 group-hover:w-full transition-all duration-300"></span>
                         </a>
+                        <a href="{{ route('registrations.index') }}" class="text-gray-700 hover:text-green-600 font-medium transition-colors duration-300 relative group">
+                            Mes Inscriptions
+                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 group-hover:w-full transition-all duration-300"></span>
+                        </a>
                         <a href="{{ route('blogs.index') }}" class="text-gray-700 hover:text-green-600 font-medium transition-colors duration-300 relative group {{ request()->routeIs('blogs.*') ? 'text-green-600' : '' }}">
                             Blog
                             <span class="absolute bottom-0 left-0 {{ request()->routeIs('blogs.*') ? 'w-full' : 'w-0' }} h-0.5 bg-green-600 group-hover:w-full transition-all duration-300"></span>

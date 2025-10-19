@@ -23,7 +23,6 @@
                     <td>{{ optional($event->tags)->count() ? $event->tags->pluck('name')->implode(', ') : 'No tags' }}</td>
                     <td>{{ \Carbon\Carbon::parse($event->start_date)->format('Y-m-d H:i') }}</td>
                     <td>
-                        <a href="{{ route('events.show', $event) }}" class="btn btn-info btn-sm">View</a>
                         <a href="{{ route('events.edit', $event) }}" class="btn btn-warning btn-sm">Edit</a>
                         <form action="{{ route('events.destroy', $event) }}" method="POST" style="display:inline;">
                             @csrf
@@ -119,20 +118,10 @@ body{background: linear-gradient(135deg,  rgba(226,226,226,1) 0%,rgba(219,219,21
                         @endif
                     </p>
                 </div>
-                <!-- 
-                <div class="btn">
-                    <a href="{{ route('events.show', $event) }}" class="text-blue-500 hover:underline block">+ Add to calendar</a>
-                </div>
-                -->
-                <button class="btn" href="{{ route('events.show', $event) }}">
-                    <span>Add to calendar</span>
-                    <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                    <line x1="16" y1="2" x2="16" y2="6"/>
-                    <line x1="8" y1="2" x2="8" y2="6"/>
-                    <line x1="3" y1="10" x2="21" y2="10"/>
-                    </svg>
-                </button>
+                <a href="{{ route('events.show', $event) }}" class="btn">
+                    <span class="icon">➡️</span>
+                    View Details
+                </a>
                 
             </div>
         @empty
