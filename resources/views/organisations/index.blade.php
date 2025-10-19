@@ -1,8 +1,9 @@
-@extends('layouts.app')
+@extends(auth()->user()->role === 'admin' ? 'layouts.app' : 'layouts.front')
 
 @section('title', 'Organisations')
 
 @section('content')
+@if(auth()->user()->role === 'admin')
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h2 text-primary fw-bold">EcoEvents Organisations</h1>
@@ -232,4 +233,75 @@
         }
     };
 </script>
+@else
+<div id="app" class="min-h-screen">
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Organizations Directory</h1>
+            <p class="text-xl md:text-2xl mb-8 text-blue-100">Discover and connect with amazing organizations</p>
+            <div class="max-w-md mx-auto">
+                <div class="relative">
+                    <input type="text"
+                           id="search-input"
+                           placeholder="Search organizations..."
+                           class="w-full px-4 py-3 pl-12 rounded-full border-0 shadow-lg focus:ring-4 focus:ring-blue-200 outline-none">
+                    <svg class="absolute left-4 top-3.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+
+        <!-- Organizations Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            @foreach($organisations as $organisation)
+            <div class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center">
+                @if($organisation->logo_url)
+                <img src="{{ $organisation->logo_url }}" alt="{{ $organisation->name }}" class="h-24 w-24 rounded-full object-cover mb-4 border-2 border-blue-500 shadow-sm">
+                @else
+                <div class="bg-blue-500 text-white rounded-full h-24 w-24 flex items-center justify-center mb-4 shadow-sm">
+                    <i class="fas fa-building fa-2x"></i>
+                </div>
+                @endif
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ $organisation->name }}</h3>
+                <p class="text-gray-600 mb-4">{{ Str::limit($organisation->description, 100) }}</p>
+                @if($organisation->website)
+                <a href="{{ $organisation->website }}" target="_blank" class="mt-auto inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg">
+                    Visit Website
+                </a>
+                @endif
+        </div>
+            @endforeach
+
+        <!-- Empty State -->
+        <div class="text-center py-16" style="display: none;">
+            <svg class="mx-auto h-24 w-24 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+            </svg>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">No organizations found</h3>
+            <p class="text-gray-500">Check back later for new organizations.</p>
+        </div>
+
+        <!-- Pagination -->
+        <div id="pagination" class="mt-12 flex justify-center" style="display: none;">
+            <!-- Pagination will be populated by JavaScript -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t mt-16">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+            <div class="text-center text-gray-500">
+                <p>&copy; 2024 Organization Directory. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</div>
+@endif
 @endsection

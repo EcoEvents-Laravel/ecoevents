@@ -57,7 +57,6 @@ Route::middleware('auth')->group(function () {
     })->name('chatbot');
     Route::post('/chatbot', [ChatbotController::class, 'getResponse'])->name('chatbot.response');
     
-    
 });
 
 Auth::routes();
