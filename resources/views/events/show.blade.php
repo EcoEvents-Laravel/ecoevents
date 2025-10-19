@@ -1,97 +1,88 @@
-@extends('layouts.app')
+@extends('layouts.front')
 
 @section('title', $event->title)
 
 @section('content')
-<div class="row">
-    <!-- Colonne de gauche : Informations -->
-    <div class="col-md-8">
-        @if($event->banner_url)
-            <img src="{{ asset('storage/' . $event->banner_url) }}" alt="Bannière de l'événement" class="img-fluid rounded shadow-sm mb-4">
-        @endif
-        
-        <h1 class="display-4">{{ $event->title }}</h1>
-        <p class="text-muted mb-4">Organisé par : {{ $event->user->name ?? 'Organisateur inconnu' }}</p>
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <!-- Colonne principale -->
+        <div class="lg:col-span-2">
+            @if($event->banner_url)
+                <img src="{{ asset('storage/' . $event->banner_url) }}" alt="Bannière" class="rounded-2xl shadow-lg mb-8 w-full h-96 object-cover">
+            @endif
+            <h1 class="text-4xl font-extrabold text-gray-900 mb-4">{{ $event->title }}</h1>
+            <p class="text-gray-600 leading-relaxed mb-8">{!! nl2br(e($event->description)) !!}</p>
 
-        <div class="mb-4">
-            {!! nl2br(e($event->description)) !!}
-        </div>
-
-        <!-- SECTION COMMENTAIRES -->
-        <hr class="my-4">
-        <h3 class="mb-3">Commentaires</h3>
-
-        @auth
-            <form action="{{ route('comments.store') }}" method="POST" class="mb-4 card card-body">
-                @csrf
-                <input type="hidden" name="event_id" value="{{ $event->id }}">
-                <div class="mb-3">
-                    <label for="content" class="form-label">Votre commentaire</label>
-                    <textarea name="content" id="content" rows="4" class="form-control @error('content') is-invalid @enderror" required minlength="10">{{ old('content') }}</textarea>
-                    @error('content')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+            <!-- ============================================= -->
+            <!-- SECTION COMMENTAIRES (TA FONCTIONNALITÉ) -->
+            <!-- ============================================= -->
+            <div class="mt-12">
+                <h3 class="text-2xl font-bold mb-6">Commentaires</h3>
+                @auth
+                    <form action="{{ route('comments.store') }}" method="POST" class="bg-white p-6 rounded-xl shadow-md mb-8">
+                        @csrf
+                        <input type="hidden" name="event_id" value="{{ $event->id }}">
+                        <textarea name="content" rows="4" class="w-full border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500" placeholder="Laissez votre commentaire..." required></textarea>
+                        @error('content') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+                        <button type="submit" class="mt-4 px-6 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-all duration-300">Publier</button>
+                    </form>
+                @else
+                    <p class="mb-8 bg-gray-100 p-4 rounded-lg"><a href="{{ route('login') }}" class="font-semibold text-green-600 hover:underline">Connectez-vous</a> pour laisser un commentaire.</p>
+                @endauth
+                <div class="space-y-6">
+                    @forelse ($event->comments->sortByDesc('created_at') as $comment)
+                        <div class="flex gap-4">
+                            <div class="flex-shrink-0 w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center font-bold text-gray-600">{{ strtoupper(substr($comment->user->name, 0, 1)) }}</div>
+                            <div class="flex-grow bg-white p-4 rounded-xl shadow">
+                                <div class="flex justify-between items-center">
+                                    <p class="font-bold">{{ $comment->user->name }}</p>
+                                    <small class="text-gray-500">{{ $comment->created_at->diffForHumans() }}</small>
+                                </div>
+                                <p class="mt-2 text-gray-700">{{ $comment->content }}</p>
+                                @can('delete', $comment)
+                                    <form action="{{ route('comments.destroy', $comment) }}" method="POST" onsubmit="return confirm('Sûr ?');" class="text-right mt-2">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="text-xs text-red-500 hover:underline">Supprimer</button>
+                                    </form>
+                                @endcan
+                            </div>
+                        </div>
+                    @empty
+                        <p class="text-gray-500">Aucun commentaire pour le moment.</p>
+                    @endforelse
                 </div>
-                <button type="submit" class="btn btn-primary">Publier</button>
-            </form>
-        @else
-            <p class="mb-4"><a href="{{ route('login') }}">Connectez-vous</a> pour laisser un commentaire.</p>
-        @endauth
-
-        <div class="list-group">
-            @forelse ($event->comments->sortByDesc('created_at') as $comment)
-                <div class="list-group-item list-group-item-action flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">{{ $comment->user->name }}</h5>
-                        <small>{{ $comment->created_at->diffForHumans() }}</small>
-                    </div>
-                    <p class="mb-1">{{ nl2br(e($comment->content)) }}</p>
-                    @can('delete', $comment)
-                        <form action="{{ route('comments.destroy', $comment) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr ?');" class="text-end">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
-                        </form>
-                    @endcan
-                </div>
-            @empty
-                <p>Aucun commentaire pour le moment.</p>
-            @endforelse
-        </div>
-    </div>
-
-    <!-- Colonne de droite : Méta-données et Inscription -->
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header">
-                Informations
             </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item"><strong>Type :</strong> {{ $event->eventType->name ?? 'N/A' }}</li>
-                <li class="list-group-item"><strong>Tags :</strong> {{ $event->tags->pluck('name')->implode(', ') }}</li>
-                <li class="list-group-item"><strong>Début :</strong> {{ \Carbon\Carbon::parse($event->start_date)->format('d/m/Y H:i') }}</li>
-                <li class="list-group-item"><strong>Fin :</strong> {{ \Carbon\Carbon::parse($event->end_date)->format('d/m/Y H:i') }}</li>
-                <li class="list-group-item"><strong>Lieu :</strong> {{ $event->address }}, {{ $event->city }}</li>
-            </ul>
-            <div class="card-body">
-                <!-- SECTION INSCRIPTION -->
+        </div>
+
+        <!-- Colonne latérale -->
+        <div class="lg:col-span-1">
+            <div class="sticky top-24 bg-white p-6 rounded-2xl shadow-lg">
+                <h3 class="text-xl font-bold mb-4">Informations</h3>
+                <ul class="space-y-3 text-gray-700">
+                    <li><strong>Type :</strong> {{ $event->eventType->name ?? 'N/A' }}</li>
+                    <li><strong>Début :</strong> {{ $event->start_date->format('d/m/Y H:i') }}</li>
+                    <li><strong>Fin :</strong> {{ $event->end_date->format('d/m/Y H:i') }}</li>
+                    <li><strong>Lieu :</strong> {{ $event->city }}</li>
+                </ul>
+                <hr class="my-6">
+                <!-- ============================================= -->
+                <!-- SECTION INSCRIPTION (TA FONCTIONNALITÉ) -->
+                <!-- ============================================= -->
                 @auth
                     @if($userRegistration)
                         <form action="{{ route('registrations.destroy', $userRegistration) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger w-100">Annuler mon inscription</button>
+                            @csrf @method('DELETE')
+                            <button type="submit" class="w-full px-6 py-3 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 transition-all duration-300">Annuler l'inscription</button>
                         </form>
-                        <p class="text-success text-center mt-2 small">Vous êtes inscrit.</p>
                     @else
                         <form action="{{ route('registrations.store') }}" method="POST">
                             @csrf
                             <input type="hidden" name="event_id" value="{{ $event->id }}">
-                            <button type="submit" class="btn btn-success w-100">S'inscrire à l'événement</button>
+                            <button type="submit" class="w-full px-6 py-3 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-all duration-300">S'inscrire</button>
                         </form>
                     @endif
                 @else
-                    <a href="{{ route('login') }}" class="btn btn-primary w-100">Connectez-vous pour vous inscrire</a>
+                    <a href="{{ route('login') }}" class="w-full block text-center px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-all duration-300">Connectez-vous pour vous inscrire</a>
                 @endauth
             </div>
         </div>

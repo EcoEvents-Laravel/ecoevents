@@ -1,37 +1,44 @@
-@extends('layouts.app')  <!-- Assume you have a main layout -->
+@extends('layouts.front')
+
+@section('title', 'Accueil')
 
 @section('content')
-    <h1>Events</h1>
-    <a href="{{ route('events.create') }}" class="btn btn-primary">Create New Event</a>
-    <table class="table mt-3">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Type</th>
-                <th>Tags</th>
-                <th>Start Date</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($events as $event)
-                <tr>
-                    <td>{{ $event->title }}</td>
-                    <td>{{ $event->eventType->name ?? 'N/A' }}</td>
-                    <td>{{ $event->tags->pluck('name')->implode(', ') }}</td>
-                    <td>{{ $event->start_date->format('Y-m-d H:i') }}</td>
-                    <td>
-                        <a href="{{ route('events.show', $event) }}" class="btn btn-info btn-sm">View</a>
-                        <a href="{{ route('events.edit', $event) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <form action="{{ route('events.destroy', $event) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-    {{ $events->links() }}
+    <header class="bg-gradient-to-br from-green-50 via-blue-50 to-green-100 py-20 text-center">
+        <div class="container mx-auto px-4">
+            <h1 class="text-5xl font-black text-gray-900 mb-4">Rejoignez le Mouvement Vert</h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                Découvrez, participez et organisez des événements qui construisent un avenir durable.
+            </p>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <h2 class="text-3xl font-bold text-gray-800 mb-8">Événements à venir</h2>
+        
+        @if($events->isEmpty())
+            <p>Aucun événement pour le moment.</p>
+        @else
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                @foreach ($events as $event)
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
+                        <a href="{{ route('events.show', $event->id) }}">
+                            <div class="p-6">
+                                <span class="text-sm text-green-600 font-semibold">{{ $event->eventType->name ?? 'Catégorie' }}</span>
+                                <h3 class="text-xl font-bold text-gray-900 mt-2 mb-3 h-14">{{ $event->title }}</h3>
+                                <p class="text-gray-600 text-sm mb-4">
+                                    📅 {{ $event->start_date->format('d/m/Y') }} | 📍 {{ $event->city }}
+                                </p>
+                                <span class="w-full text-center block px-4 py-2 bg-gray-800 text-white font-semibold rounded-lg hover:bg-gray-900 transition-colors duration-300">
+                                    Voir les détails
+                                </span>
+                            </div>
+                        </a>
+                    </div>
+                @endforeach
+            </div>
+            <div class="mt-12">
+                {{ $events->links() }}
+            </div>
+        @endif
+    </div>
 @endsection
