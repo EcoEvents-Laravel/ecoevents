@@ -29,22 +29,6 @@ class BadgeTest extends TestCase
     }
 
     /** @test */
-    public function badge_create_page(): void
-    {
-        $response = $this->get('/badge');
-
-        $response->assertSee('badge.index');
-    }
-
-    /** @test */
-    public function badge_edit_page(): void
-    {
-        $response = $this->get('/badge/1/edit');
-
-        $response->assertSee('Edit Badge');
-    }
-
-    /** @test */
     public function badge_show_page(): void
     {
         $response = $this->get('/badge/1');

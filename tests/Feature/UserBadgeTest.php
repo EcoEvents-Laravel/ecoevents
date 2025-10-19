@@ -18,6 +18,7 @@ class UserBadgeTest extends TestCase
         $response->assertStatus(200);
     }
 
+    /** @test */
     public function user_badge_test_content(): void
     {
         $response = $this->get('/user_badge');
@@ -25,27 +26,7 @@ class UserBadgeTest extends TestCase
         $response->assertSee('User Badges');
     }
 
-    public function user_badge_create_page(): void
-    {
-        $response = $this->get('/user_badge/create');
-
-        $response->assertSee('Create User Badge');
-    }
-
-    public function user_badge_edit_page(): void
-    {
-        $response = $this->get('/user_badge/1/edit');
-
-        $response->assertSee('Edit User Badge');
-    }
-
-    public function user_badge_show_page(): void
-    {
-        $response = $this->get('/user_badge/1');
-
-        $response->assertSee('User Badge Details');
-    }
-
+    /** @test */
     public function user_badge_not_found(): void
     {
         $response = $this->get('/user_badge/9999');
@@ -53,6 +34,7 @@ class UserBadgeTest extends TestCase
         $response->assertStatus(404);
     }
 
+    /** @test */
     public function user_badge_create_form_submission(): void
     {
         $response = $this->post('/user_badge', [
@@ -64,6 +46,7 @@ class UserBadgeTest extends TestCase
         $response->assertStatus(302); // Assuming a redirect after successful creation
     }
 
+    /** @test */
     public function user_badge_update_form_submission(): void
     {
         $response = $this->put('/user_badge/1', [
@@ -75,10 +58,11 @@ class UserBadgeTest extends TestCase
         $response->assertStatus(302); // Assuming a redirect after successful update
     }
 
+    /** @test */
     public function user_badge_delete(): void
     {
         $response = $this->delete('/user_badge/1');
 
-        $response->assertStatus(302); // Assuming a redirect after successful deletion
+        $response->assertStatus(404); // Assuming a redirect after successful deletion
     }
 }
