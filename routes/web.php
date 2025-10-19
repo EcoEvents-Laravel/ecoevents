@@ -18,6 +18,11 @@ Route::get('/register', function () {
 Route::get('/welcome', function () {
     return view('welcome');
 })->name('welcome');
+
+// Frontend Office Route (Public Organizations Display)
+Route::get('/organizations', function () {
+    return view('frontend.organizations.index');
+})->name('frontend.organizations.index');
 Route::resource('/badge', BadgeController::class);
 Route::resource('/user_badge', UserBadgeController::class);
 Route::resource('/events', EventController::class);
@@ -25,3 +30,12 @@ Route::resource('/registrations', RegistrationController::class);
 Route::resource('/event-types', EventTypeController::class);
 Route::resource('/tags', TagController::class);
 Route::resource('/organisations', OrganisationController::class);
+
+// API routes for frontend office
+Route::prefix('api/organisations')->group(function () {
+    Route::get('/', [OrganisationController::class, 'apiIndex']);
+    Route::post('/', [OrganisationController::class, 'apiStore']);
+    Route::get('/{organisation}', [OrganisationController::class, 'apiShow']);
+    Route::put('/{organisation}', [OrganisationController::class, 'apiUpdate']);
+    Route::delete('/{organisation}', [OrganisationController::class, 'apiDestroy']);
+});
